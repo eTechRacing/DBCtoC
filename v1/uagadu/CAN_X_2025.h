@@ -3,8 +3,6 @@
 
 #include "main.h"
 
-//Variables----------------------------------------------------------------------------------------------
-
 extern uint8_t el_AUTO_STATUS;
 extern int8_t Inv_R_Iq;
 extern int8_t Inv_R_Icommand;
@@ -168,8 +166,7 @@ extern uint16_t APPS2_Bits;
 extern uint16_t APPS1_Bits;
 extern uint8_t ETAS_Sync;
 
-//TX-----------------------------------------------------------------------------------------------------
-
+// TX Functions
 void message_cantx_VECTOR__INDEPENDENT_SIG_MSG(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
 void message_cantx_STAT_BMS_AIRs_State(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
 void message_cantx_CTRL_CHARGER_AIRs_Request(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
@@ -205,8 +202,7 @@ void message_cantx_RAW_FECU_Data2(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDe
 void message_cantx_RAW_FECU_Data1(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
 void message_cantx_STAT_ETAS_Sync(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
 
-//RX-----------------------------------------------------------------------------------------------------
-
+// RX Functions
 void message_canrx_VECTOR__INDEPENDENT_SIG_MSG(uint8_t *RxData);
 void message_canrx_STAT_BMS_AIRs_State(uint8_t *RxData);
 void message_canrx_CTRL_CHARGER_AIRs_Request(uint8_t *RxData);
@@ -242,4 +238,4 @@ void message_canrx_RAW_FECU_Data2(uint8_t *RxData);
 void message_canrx_RAW_FECU_Data1(uint8_t *RxData);
 void message_canrx_STAT_ETAS_Sync(uint8_t *RxData);
 
-#endif /* INC_CAN_X_2025_C_ */
+#endif /* INC_CAN_X_2025_H_ */

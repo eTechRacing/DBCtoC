@@ -1,5 +1,9 @@
 #include "CAN_X_2025.h"
 
+// Variables globals
+CAN_TxHeaderTypeDef TxHeader = {0};
+uint32_t TxMailbox = 0;
+uint8_t TxData[8] = {0};
 
 //Variables----------------------------------------------------------------------------------------------
 
@@ -168,7 +172,7 @@ uint8_t ETAS_Sync;
 
 //Tx functions-------------------------------------------------------------------------------------------
 
-void message_cantx_VECTOR__INDEPENDENT_SIG_MSG(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_VECTOR__INDEPENDENT_SIG_MSG(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 0;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -191,40 +195,40 @@ void message_cantx_VECTOR__INDEPENDENT_SIG_MSG(CAN_TxHeaderTypeDef TxHeader, CAN
    TxData[0] = (TxData[0] & ~1) | (((SOE >> 9) << 0) & 1);
    TxData[1] = SOE >> 1;
    TxData[2] = (TxData[2] & ~128) | ((SOE << 7) & 128); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_BMS_AIRs_State(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_BMS_AIRs_State(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
    TxHeader.StdId = 145;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~15) | (((Charger_AIRs_State >> 0) << 0) & 15);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_CTRL_CHARGER_AIRs_Request(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_CTRL_CHARGER_AIRs_Request(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
    TxHeader.StdId = 144;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~15) | (((Charger_AIRs_Request >> 0) << 0) & 15);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_CHARGER_Sync(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_CHARGER_Sync(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
    TxHeader.StdId = 128;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~255) | (((Charger_Sync >> 0) << 0) & 255);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ETAS_VDC_Params(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ETAS_VDC_Params(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -242,10 +246,10 @@ void message_cantx_PROC_ETAS_VDC_Params(CAN_TxHeaderTypeDef TxHeader, CAN_Handle
    TxData[3] = (TxData[3] & ~192) | ((VDC_AP_SatUp << 6) & 192); 
    TxData[1] = (TxData[1] & ~15) | (((VDC_AP_SatDown >> 3) << 0) & 15);
    TxData[2] = (TxData[2] & ~224) | ((VDC_AP_SatDown << 5) & 224); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ETAS_VDC_LapTiming(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ETAS_VDC_LapTiming(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 4;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -257,10 +261,10 @@ void message_cantx_PROC_ETAS_VDC_LapTiming(CAN_TxHeaderTypeDef TxHeader, CAN_Han
    TxData[2] = (TxData[2] & ~128) | ((LapCount << 7) & 128); 
    TxData[0] = (TxData[0] & ~255) | (((LapTime >> 3) << 0) & 255);
    TxData[1] = (TxData[1] & ~224) | ((LapTime << 5) & 224); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_CTRL_BMS_Accu_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_CTRL_BMS_Accu_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -278,10 +282,10 @@ void message_cantx_CTRL_BMS_Accu_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTy
    TxData[0] = (TxData[0] & ~8) | (((Shutdown_IMD >> 0) << 3) & 8);
    TxData[0] = (TxData[0] & ~16) | (((Shutdown_BMS >> 0) << 4) & 16);
    TxData[0] = (TxData[0] & ~192) | (((AIRs_State >> 0) << 6) & 192);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_CTRL_BMS_Cell_Extremes(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_CTRL_BMS_Cell_Extremes(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -296,10 +300,10 @@ void message_cantx_CTRL_BMS_Cell_Extremes(CAN_TxHeaderTypeDef TxHeader, CAN_Hand
    TxData[1] = (TxData[1] & ~252) | ((Lowest_CellVoltage << 2) & 252); 
    TxData[3] = (TxData[3] & ~15) | (((Lowest_CellTemp >> 6) << 0) & 15);
    TxData[4] = (TxData[4] & ~252) | ((Lowest_CellTemp << 2) & 252); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_DASH_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_DASH_Keep_Alive(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -312,10 +316,10 @@ void message_cantx_STAT_DASH_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_Handle
    TxData[1] = (TxData[1] & ~255) | (((DASH_3V3 >> 4) << 0) & 255);
    TxData[2] = (TxData[2] & ~240) | ((DASH_3V3 << 4) & 240); 
    TxData[0] = (TxData[0] & ~255) | (((Dash_Alive >> 0) << 0) & 255);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_BMS_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_BMS_Keep_Alive(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -328,10 +332,10 @@ void message_cantx_STAT_BMS_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleT
    TxData[1] = (TxData[1] & ~255) | (((BMS_12V >> 4) << 0) & 255);
    TxData[2] = (TxData[2] & ~240) | ((BMS_12V << 4) & 240); 
    TxData[0] = (TxData[0] & ~255) | (((BMS_Alive >> 0) << 0) & 255);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ETAS_TS_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ETAS_TS_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -348,10 +352,10 @@ void message_cantx_PROC_ETAS_TS_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTyp
    TxData[2] = (TxData[2] & ~240) | ((SOC_Low << 4) & 240); 
    TxData[0] = (TxData[0] & ~255) | (((SOC_Avg >> 2) << 0) & 255);
    TxData[1] = (TxData[1] & ~192) | ((SOC_Avg << 6) & 192); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ELLIPSE_Auto(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ELLIPSE_Auto(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -369,10 +373,10 @@ void message_cantx_PROC_ELLIPSE_Auto(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTyp
    TxData[0] = (TxData[0] & ~1) | (((el_AngleTrack >> 15) << 0) & 1);
    TxData[1] = el_AngleTrack >> 7;
    TxData[2] = (TxData[2] & ~254) | ((el_AngleTrack << 1) & 254); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_CTRL_ELLIPSE_GPS_Vel(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_CTRL_ELLIPSE_GPS_Vel(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -387,10 +391,10 @@ void message_cantx_CTRL_ELLIPSE_GPS_Vel(CAN_TxHeaderTypeDef TxHeader, CAN_Handle
    TxData[4] = (TxData[4] & ~1) | (((el_Vel_GPS_D >> 15) << 0) & 1);
    TxData[5] = el_Vel_GPS_D >> 7;
    TxData[6] = (TxData[6] & ~254) | ((el_Vel_GPS_D << 1) & 254); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_ETAS_Diagnostics(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_ETAS_Diagnostics(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 4;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -424,10 +428,10 @@ void message_cantx_STAT_ETAS_Diagnostics(CAN_TxHeaderTypeDef TxHeader, CAN_Handl
    TxData[0] = (TxData[0] & ~32) | (((Disconnection_BMS >> 0) << 5) & 32);
    TxData[1] = (TxData[1] & ~128) | (((Disconnection_APPS2 >> 0) << 7) & 128);
    TxData[0] = (TxData[0] & ~1) | (((Disconnection_APPS1 >> 0) << 0) & 1);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ETAS_VDC_Values(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ETAS_VDC_Values(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -444,10 +448,10 @@ void message_cantx_PROC_ETAS_VDC_Values(CAN_TxHeaderTypeDef TxHeader, CAN_Handle
    TxData[0] = (TxData[0] & ~1) | (((APPS2_Value >> 6) << 0) & 1);
    TxData[1] = (TxData[1] & ~252) | ((APPS2_Value << 2) & 252); 
    TxData[0] = (TxData[0] & ~254) | (((APPS1_Value >> 0) << 1) & 254);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_CTRL_DASH_Driver_Inputs(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_CTRL_DASH_Driver_Inputs(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 3;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -465,10 +469,10 @@ void message_cantx_CTRL_DASH_Driver_Inputs(CAN_TxHeaderTypeDef TxHeader, CAN_Han
    TxData[0] = (TxData[0] & ~128) | (((PrechargeRequest >> 0) << 7) & 128);
    TxData[2] = (TxData[2] & ~192) | (((Refri_R >> 0) << 6) & 192);
    TxData[1] = (TxData[1] & ~3) | (((Refri_L >> 0) << 0) & 3);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_CTRL_ETAS_System(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_CTRL_ETAS_System(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -478,19 +482,19 @@ void message_cantx_CTRL_ETAS_System(CAN_TxHeaderTypeDef TxHeader, CAN_HandleType
    TxData[0] = (TxData[0] & ~2) | (((Car_OK >> 0) << 1) & 2);
    TxData[0] = (TxData[0] & ~192) | (((AIRs_Request >> 0) << 6) & 192);
    TxData[0] = (TxData[0] & ~4) | (((BrakeLight_Control >> 0) << 2) & 4);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ELLIPSE_EKF_Pos(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ELLIPSE_EKF_Pos(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 8;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
    TxHeader.StdId = 85;
    TxHeader.TransmitGlobalTime = DISABLE;
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ELLIPSE_IMU_Accel(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ELLIPSE_IMU_Accel(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -505,10 +509,10 @@ void message_cantx_PROC_ELLIPSE_IMU_Accel(CAN_TxHeaderTypeDef TxHeader, CAN_Hand
    TxData[0] = (TxData[0] & ~1) | (((el_Accel_X >> 15) << 0) & 1);
    TxData[1] = el_Accel_X >> 7;
    TxData[2] = (TxData[2] & ~254) | ((el_Accel_X << 1) & 254); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ELLIPSE_EKF_Euler(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ELLIPSE_EKF_Euler(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -523,10 +527,10 @@ void message_cantx_PROC_ELLIPSE_EKF_Euler(CAN_TxHeaderTypeDef TxHeader, CAN_Hand
    TxData[0] = (TxData[0] & ~1) | (((el_Roll >> 15) << 0) & 1);
    TxData[1] = el_Roll >> 7;
    TxData[2] = (TxData[2] & ~254) | ((el_Roll << 1) & 254); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_CTRL_ELLIPSE_EKF_Vel(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_CTRL_ELLIPSE_EKF_Vel(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -541,19 +545,19 @@ void message_cantx_CTRL_ELLIPSE_EKF_Vel(CAN_TxHeaderTypeDef TxHeader, CAN_Handle
    TxData[0] = (TxData[0] & ~1) | (((el_Vel_EKF_X >> 15) << 0) & 1);
    TxData[1] = el_Vel_EKF_X >> 7;
    TxData[2] = (TxData[2] & ~254) | ((el_Vel_EKF_X << 1) & 254); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_ELLIPSE_Status(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_ELLIPSE_Status(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 4;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
    TxHeader.StdId = 80;
    TxHeader.TransmitGlobalTime = DISABLE;
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ELLIPSE_IMU_Gyro(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ELLIPSE_IMU_Gyro(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -568,10 +572,10 @@ void message_cantx_PROC_ELLIPSE_IMU_Gyro(CAN_TxHeaderTypeDef TxHeader, CAN_Handl
    TxData[0] = (TxData[0] & ~1) | (((el_Gyro_X >> 15) << 0) & 1);
    TxData[1] = el_Gyro_X >> 7;
    TxData[2] = (TxData[2] & ~254) | ((el_Gyro_X << 1) & 254); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_CTRL_ELLIPSE_Vel_Valid(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_CTRL_ELLIPSE_Vel_Valid(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -581,10 +585,10 @@ void message_cantx_CTRL_ELLIPSE_Vel_Valid(CAN_TxHeaderTypeDef TxHeader, CAN_Hand
    TxData[1] = (TxData[1] & ~224) | ((el_SolutionMode << 5) & 224); 
    TxData[1] = (TxData[1] & ~4) | (((el_Vel_GPS_Valid >> 0) << 2) & 4);
    TxData[0] = (TxData[0] & ~64) | (((el_Vel_EKF_Valid >> 0) << 6) & 64);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ETAS_Inverter_R_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ETAS_Inverter_R_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 5;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -598,10 +602,10 @@ void message_cantx_PROC_ETAS_Inverter_R_Data(CAN_TxHeaderTypeDef TxHeader, CAN_H
    TxData[1] = (TxData[1] & ~192) | ((Inv_R_TempIGBT << 6) & 192); 
    TxData[2] = (TxData[2] & ~7) | (((RR_Vel_ms_Wheel >> 5) << 0) & 7);
    TxData[3] = (TxData[3] & ~248) | ((RR_Vel_ms_Wheel << 3) & 248); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ETAS_Inverter_L_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ETAS_Inverter_L_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 5;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -615,10 +619,10 @@ void message_cantx_PROC_ETAS_Inverter_L_Data(CAN_TxHeaderTypeDef TxHeader, CAN_H
    TxData[1] = (TxData[1] & ~192) | ((Inv_L_TempIGBT << 6) & 192); 
    TxData[2] = (TxData[2] & ~7) | (((RL_Vel_ms_Wheel >> 5) << 0) & 7);
    TxData[3] = (TxData[3] & ~248) | ((RL_Vel_ms_Wheel << 3) & 248); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ETAS_VDC_Suspe(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ETAS_VDC_Suspe(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -634,10 +638,10 @@ void message_cantx_PROC_ETAS_VDC_Suspe(CAN_TxHeaderTypeDef TxHeader, CAN_HandleT
    TxData[3] = (TxData[3] & ~240) | ((SUSP_F_R << 4) & 240); 
    TxData[0] = (TxData[0] & ~255) | (((SUSP_F_L >> 6) << 0) & 255);
    TxData[1] = (TxData[1] & ~252) | ((SUSP_F_L << 2) & 252); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_PROC_ETAS_VDC_Tq(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_PROC_ETAS_VDC_Tq(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 4;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -649,10 +653,10 @@ void message_cantx_PROC_ETAS_VDC_Tq(CAN_TxHeaderTypeDef TxHeader, CAN_HandleType
    TxData[2] = (TxData[2] & ~252) | ((Torque_R << 2) & 252); 
    TxData[0] = (TxData[0] & ~255) | (((Torque_L >> 4) << 0) & 255);
    TxData[1] = (TxData[1] & ~240) | ((Torque_L << 4) & 240); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_RAW_RECU_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_RAW_RECU_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 3;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -662,10 +666,10 @@ void message_cantx_RAW_RECU_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef
    TxData[1] = (TxData[1] & ~240) | ((Susp_R_R_Bits << 4) & 240); 
    TxData[1] = (TxData[1] & ~15) | (((Susp_R_L_Bits >> 8) << 0) & 15);
    TxData[2] = Susp_R_L_Bits >> 0;
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_FECU_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_FECU_Keep_Alive(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -682,10 +686,10 @@ void message_cantx_STAT_FECU_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_Handle
    TxData[1] = (TxData[1] & ~32) | (((Shutdown_SC_BOTS >> 0) << 5) & 32);
    TxData[1] = (TxData[1] & ~64) | (((Shutdown_BSPD_Inertia >> 0) << 6) & 64);
    TxData[0] = (TxData[0] & ~255) | (((Front_Alive >> 0) << 0) & 255);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_RECU_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_RECU_Keep_Alive(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -705,10 +709,10 @@ void message_cantx_STAT_RECU_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_Handle
    TxData[1] = (TxData[1] & ~8) | (((Shutdown_HVD >> 0) << 3) & 8);
    TxData[1] = (TxData[1] & ~16) | (((Shutdown_HVBox >> 0) << 4) & 16);
    TxData[0] = (TxData[0] & ~255) | (((Rear_Alive >> 0) << 0) & 255);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_RAW_FECU_Data2(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_RAW_FECU_Data2(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 8;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -724,10 +728,10 @@ void message_cantx_RAW_FECU_Data2(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDe
    TxData[1] = (TxData[1] & ~240) | ((Susp_F_R_Bits << 4) & 240); 
    TxData[1] = (TxData[1] & ~15) | (((Susp_F_L_Bits >> 8) << 0) & 15);
    TxData[2] = Susp_F_L_Bits >> 0;
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_RAW_FECU_Data1(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_RAW_FECU_Data1(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
@@ -741,17 +745,17 @@ void message_cantx_RAW_FECU_Data1(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDe
    TxData[2] = APPS2_Bits >> 0;
    TxData[0] = (TxData[0] & ~255) | (((APPS1_Bits >> 4) << 0) & 255);
    TxData[1] = (TxData[1] & ~240) | ((APPS1_Bits << 4) & 240); 
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
-void message_cantx_STAT_ETAS_Sync(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData) {
+void message_cantx_STAT_ETAS_Sync(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
    TxHeader.StdId = 0;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~255) | (((ETAS_Sync >> 0) << 0) & 255);
-if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
 //Rx functions-------------------------------------------------------------------------------------------

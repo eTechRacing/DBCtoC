@@ -3,6 +3,13 @@
 
 #include "main.h"
 
+// Variables globals
+extern CAN_TxHeaderTypeDef TxHeader;
+extern uint32_t TxMailbox;
+extern uint8_t TxData[8];
+
+//Variables----------------------------------------------------------------------------------------------
+
 extern uint8_t el_AUTO_STATUS;
 extern int8_t Inv_R_Iq;
 extern int8_t Inv_R_Icommand;
@@ -168,40 +175,40 @@ extern uint8_t ETAS_Sync;
 
 //TX-----------------------------------------------------------------------------------------------------
 
-void message_cantx_VECTOR__INDEPENDENT_SIG_MSG(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_BMS_AIRs_State(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_CTRL_CHARGER_AIRs_Request(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_CHARGER_Sync(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ETAS_VDC_Params(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ETAS_VDC_LapTiming(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_CTRL_BMS_Accu_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_CTRL_BMS_Cell_Extremes(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_DASH_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_BMS_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ETAS_TS_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ELLIPSE_Auto(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_CTRL_ELLIPSE_GPS_Vel(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_ETAS_Diagnostics(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ETAS_VDC_Values(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_CTRL_DASH_Driver_Inputs(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_CTRL_ETAS_System(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ELLIPSE_EKF_Pos(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ELLIPSE_IMU_Accel(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ELLIPSE_EKF_Euler(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_CTRL_ELLIPSE_EKF_Vel(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_ELLIPSE_Status(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ELLIPSE_IMU_Gyro(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_CTRL_ELLIPSE_Vel_Valid(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ETAS_Inverter_R_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ETAS_Inverter_L_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ETAS_VDC_Suspe(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_PROC_ETAS_VDC_Tq(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_RAW_RECU_Data(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_FECU_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_RECU_Keep_Alive(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_RAW_FECU_Data2(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_RAW_FECU_Data1(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
-void message_cantx_STAT_ETAS_Sync(CAN_TxHeaderTypeDef TxHeader, CAN_HandleTypeDef hcan, uint32_t TxMailbox, uint8_t *TxData);
+void message_cantx_VECTOR__INDEPENDENT_SIG_MSG(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_BMS_AIRs_State(CAN_HandleTypeDef hcan);
+void message_cantx_CTRL_CHARGER_AIRs_Request(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_CHARGER_Sync(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ETAS_VDC_Params(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ETAS_VDC_LapTiming(CAN_HandleTypeDef hcan);
+void message_cantx_CTRL_BMS_Accu_Data(CAN_HandleTypeDef hcan);
+void message_cantx_CTRL_BMS_Cell_Extremes(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_DASH_Keep_Alive(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_BMS_Keep_Alive(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ETAS_TS_Data(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ELLIPSE_Auto(CAN_HandleTypeDef hcan);
+void message_cantx_CTRL_ELLIPSE_GPS_Vel(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_ETAS_Diagnostics(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ETAS_VDC_Values(CAN_HandleTypeDef hcan);
+void message_cantx_CTRL_DASH_Driver_Inputs(CAN_HandleTypeDef hcan);
+void message_cantx_CTRL_ETAS_System(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ELLIPSE_EKF_Pos(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ELLIPSE_IMU_Accel(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ELLIPSE_EKF_Euler(CAN_HandleTypeDef hcan);
+void message_cantx_CTRL_ELLIPSE_EKF_Vel(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_ELLIPSE_Status(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ELLIPSE_IMU_Gyro(CAN_HandleTypeDef hcan);
+void message_cantx_CTRL_ELLIPSE_Vel_Valid(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ETAS_Inverter_R_Data(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ETAS_Inverter_L_Data(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ETAS_VDC_Suspe(CAN_HandleTypeDef hcan);
+void message_cantx_PROC_ETAS_VDC_Tq(CAN_HandleTypeDef hcan);
+void message_cantx_RAW_RECU_Data(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_FECU_Keep_Alive(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_RECU_Keep_Alive(CAN_HandleTypeDef hcan);
+void message_cantx_RAW_FECU_Data2(CAN_HandleTypeDef hcan);
+void message_cantx_RAW_FECU_Data1(CAN_HandleTypeDef hcan);
+void message_cantx_STAT_ETAS_Sync(CAN_HandleTypeDef hcan);
 
 //RX-----------------------------------------------------------------------------------------------------
 
@@ -240,4 +247,4 @@ void message_canrx_RAW_FECU_Data2(uint8_t *RxData);
 void message_canrx_RAW_FECU_Data1(uint8_t *RxData);
 void message_canrx_STAT_ETAS_Sync(uint8_t *RxData);
 
-#endif /* INC_CAN_X_2025_C_ */
+#endif /* INC_CAN_X_2025_H_ */

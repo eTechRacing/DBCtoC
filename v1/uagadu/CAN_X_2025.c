@@ -7,6 +7,7 @@ uint8_t TxData[8] = {0};
 
 //Variables----------------------------------------------------------------------------------------------
 
+int8_t New_Signal_193;
 uint8_t el_AUTO_STATUS;
 int8_t Inv_R_Iq;
 int8_t Inv_R_Icommand;
@@ -15,6 +16,30 @@ int8_t Inv_L_Iq;
 int8_t Inv_L_Icommand;
 int8_t Inv_L_Iactual;
 uint16_t SOE;
+uint16_t ETAS_MSG_Counter;
+uint8_t BMS_Alive;
+uint8_t BMS_Balancing_Enable;
+uint8_t BMS_Charge_Flag;
+uint8_t BMS_CAN_Disconnection;
+uint8_t BMS_Voltage_Disconnection;
+uint8_t BMS_NTC_Disconnection;
+uint8_t BMS_Current_Disconnection;
+uint8_t BMS_Undertemperature;
+uint8_t BMS_Overtemperature;
+uint8_t BMS_Overvoltage;
+uint8_t BMS_Undervoltage;
+uint8_t Precharge_State;
+uint8_t AIR_Plus_State;
+uint8_t AIR_Minus_State;
+uint8_t Shutdown_PackageIntck;
+uint32_t Charger_Accumulator_Current;
+uint16_t Charger_Lowest_Cell_Temperature;
+uint16_t Charger_Highest_Cell_Temperature;
+uint16_t Charger_Average_Cell_Temperature;
+uint32_t Charger_Acumulator_Voltage;
+uint16_t Charger_Highest_Cell_Voltage;
+uint16_t Charger_Lowest_Cell_Voltage;
+uint8_t Charger_PrechargeOK;
 uint8_t Charger_AIRs_State;
 uint8_t Charger_AIRs_Request;
 uint8_t Charger_Sync;
@@ -29,7 +54,7 @@ uint16_t TotalTime;
 uint8_t LapCount;
 uint16_t LapTime;
 uint16_t Average_CellTemp;
-uint32_t Accumulator_Voltage;
+uint16_t Accumulator_Voltage;
 uint16_t Accumulator_Current;
 uint8_t Shutdown_PackageIntck;
 uint8_t Shutdown_IMD;
@@ -43,6 +68,8 @@ uint16_t DASH_LV;
 uint16_t DASH_5V;
 uint16_t DASH_3V3;
 uint8_t Dash_Alive;
+uint8_t IMD_OK;
+uint8_t BMS_OK;
 uint16_t BMS_LV;
 uint16_t BMS_5V;
 uint16_t BMS_12V;
@@ -105,8 +132,8 @@ uint8_t Driver;
 uint8_t RacingMode;
 uint8_t EnableDrive_Order;
 uint8_t PrechargeRequest;
-uint8_t Refri_R;
-uint8_t Refri_L;
+uint8_t Fans_R;
+uint8_t Fans_L;
 uint8_t Car_State;
 uint8_t Car_OK;
 uint8_t AIRs_Request;
@@ -168,7 +195,7 @@ uint16_t SteeringSensor_Bits;
 uint16_t BrakePedal_Bits;
 uint16_t APPS2_Bits;
 uint16_t APPS1_Bits;
-uint8_t ETAS_Sync;
+uint8_t ETAS_Sync_X;
 
 //Tx functions-------------------------------------------------------------------------------------------
 
@@ -176,8 +203,10 @@ void message_cantx_VECTOR__INDEPENDENT_SIG_MSG(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 0;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 3221225472;
+   TxHeader.StdId = VECTOR__INDEPENDENT_SIG_MSG_id;
    TxHeader.TransmitGlobalTime = DISABLE;
+   TxData[0] = (TxData[0] & ~1) | (((New_Signal_193 >> 7) << 0) & 1);
+   TxData[1] = (TxData[1] & ~254) | ((New_Signal_193 << 1) & 254); 
    TxData[0] = (TxData[0] & ~1) | (((el_AUTO_STATUS >> 7) << 0) & 1);
    TxData[1] = (TxData[1] & ~254) | ((el_AUTO_STATUS << 1) & 254); 
    TxData[0] = (TxData[0] & ~1) | (((Inv_R_Iq >> 7) << 0) & 1);
@@ -195,6 +224,95 @@ void message_cantx_VECTOR__INDEPENDENT_SIG_MSG(CAN_HandleTypeDef hcan) {
    TxData[0] = (TxData[0] & ~1) | (((SOE >> 9) << 0) & 1);
    TxData[1] = SOE >> 1;
    TxData[2] = (TxData[2] & ~128) | ((SOE << 7) & 128); 
+   TxData[0] = (TxData[0] & ~1) | (((ETAS_MSG_Counter >> 15) << 0) & 1);
+   TxData[1] = ETAS_MSG_Counter >> 7;
+   TxData[2] = (TxData[2] & ~254) | ((ETAS_MSG_Counter << 1) & 254); 
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+}
+
+void message_cantx_NM_BMS_Charger_Keep_Alive(CAN_HandleTypeDef hcan) {
+   TxHeader.DLC = 1;
+   TxHeader.IDE = 0;
+   TxHeader.RTR = 0;
+   TxHeader.StdId = NM_BMS_Charger_Keep_Alive_id;
+   TxHeader.TransmitGlobalTime = DISABLE;
+   TxData[0] = (TxData[0] & ~255) | (((BMS_Alive >> 0) << 0) & 255);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+}
+
+void message_cantx_STAT_BMS_SFR(CAN_HandleTypeDef hcan) {
+   TxHeader.DLC = 3;
+   TxHeader.IDE = 0;
+   TxHeader.RTR = 0;
+   TxHeader.StdId = STAT_BMS_SFR_id;
+   TxHeader.TransmitGlobalTime = DISABLE;
+   TxData[2] = (TxData[2] & ~64) | (((BMS_Balancing_Enable >> 0) << 6) & 64);
+   TxData[2] = (TxData[2] & ~128) | (((BMS_Charge_Flag >> 0) << 7) & 128);
+   TxData[0] = (TxData[0] & ~128) | (((BMS_CAN_Disconnection >> 0) << 7) & 128);
+   TxData[1] = (TxData[1] & ~32) | (((BMS_Voltage_Disconnection >> 0) << 5) & 32);
+   TxData[1] = (TxData[1] & ~64) | (((BMS_NTC_Disconnection >> 0) << 6) & 64);
+   TxData[1] = (TxData[1] & ~128) | (((BMS_Current_Disconnection >> 0) << 7) & 128);
+   TxData[0] = (TxData[0] & ~1) | (((BMS_Undertemperature >> 0) << 0) & 1);
+   TxData[0] = (TxData[0] & ~2) | (((BMS_Overtemperature >> 0) << 1) & 2);
+   TxData[0] = (TxData[0] & ~4) | (((BMS_Overvoltage >> 0) << 2) & 4);
+   TxData[0] = (TxData[0] & ~8) | (((BMS_Undervoltage >> 0) << 3) & 8);
+   TxData[0] = (TxData[0] & ~16) | (((Precharge_State >> 0) << 4) & 16);
+   TxData[0] = (TxData[0] & ~32) | (((AIR_Plus_State >> 0) << 5) & 32);
+   TxData[0] = (TxData[0] & ~64) | (((AIR_Minus_State >> 0) << 6) & 64);
+   TxData[0] = (TxData[0] & ~128) | (((Shutdown_PackageIntck >> 0) << 7) & 128);
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+}
+
+void message_cantx_CHARGER_Battery_Current(CAN_HandleTypeDef hcan) {
+   TxHeader.DLC = 3;
+   TxHeader.IDE = 0;
+   TxHeader.RTR = 0;
+   TxHeader.StdId = CHARGER_Battery_Current_id;
+   TxHeader.TransmitGlobalTime = DISABLE;
+   TxData[0] = (TxData[0] & ~255) | (((Charger_Accumulator_Current >> 16) << 0) & 255);
+   TxData[1] = Charger_Accumulator_Current >> 8;
+   TxData[2] = Charger_Accumulator_Current >> 0;
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+}
+
+void message_cantx_STAT_CHARGER_Battery_Temp(CAN_HandleTypeDef hcan) {
+   TxHeader.DLC = 6;
+   TxHeader.IDE = 0;
+   TxHeader.RTR = 0;
+   TxHeader.StdId = STAT_CHARGER_Battery_Temp_id;
+   TxHeader.TransmitGlobalTime = DISABLE;
+   TxData[0] = (TxData[0] & ~255) | (((Charger_Lowest_Cell_Temperature >> 8) << 0) & 255);
+   TxData[1] = Charger_Lowest_Cell_Temperature >> 0;
+   TxData[2] = (TxData[2] & ~255) | (((Charger_Highest_Cell_Temperature >> 8) << 0) & 255);
+   TxData[3] = Charger_Highest_Cell_Temperature >> 0;
+   TxData[4] = (TxData[4] & ~255) | (((Charger_Average_Cell_Temperature >> 8) << 0) & 255);
+   TxData[5] = Charger_Average_Cell_Temperature >> 0;
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+}
+
+void message_cantx_STAT_CHARGER_Battery_Voltages(CAN_HandleTypeDef hcan) {
+   TxHeader.DLC = 7;
+   TxHeader.IDE = 0;
+   TxHeader.RTR = 0;
+   TxHeader.StdId = STAT_CHARGER_Battery_Voltages_id;
+   TxHeader.TransmitGlobalTime = DISABLE;
+   TxData[4] = (TxData[4] & ~255) | (((Charger_Acumulator_Voltage >> 16) << 0) & 255);
+   TxData[5] = Charger_Acumulator_Voltage >> 8;
+   TxData[6] = Charger_Acumulator_Voltage >> 0;
+   TxData[2] = (TxData[2] & ~255) | (((Charger_Highest_Cell_Voltage >> 8) << 0) & 255);
+   TxData[3] = Charger_Highest_Cell_Voltage >> 0;
+   TxData[0] = (TxData[0] & ~255) | (((Charger_Lowest_Cell_Voltage >> 8) << 0) & 255);
+   TxData[1] = Charger_Lowest_Cell_Voltage >> 0;
+   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
+}
+
+void message_cantx_STAT_CHARGER_PrechargeOK(CAN_HandleTypeDef hcan) {
+   TxHeader.DLC = 1;
+   TxHeader.IDE = 0;
+   TxHeader.RTR = 0;
+   TxHeader.StdId = STAT_CHARGER_PrechargeOK_id;
+   TxHeader.TransmitGlobalTime = DISABLE;
+   TxData[0] = (TxData[0] & ~255) | (((Charger_PrechargeOK >> 0) << 0) & 255);
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
@@ -202,7 +320,7 @@ void message_cantx_STAT_BMS_AIRs_State(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 145;
+   TxHeader.StdId = STAT_BMS_AIRs_State_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~15) | (((Charger_AIRs_State >> 0) << 0) & 15);
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
@@ -212,7 +330,7 @@ void message_cantx_CTRL_CHARGER_AIRs_Request(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 144;
+   TxHeader.StdId = CTRL_CHARGER_AIRs_Request_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~15) | (((Charger_AIRs_Request >> 0) << 0) & 15);
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
@@ -222,7 +340,7 @@ void message_cantx_STAT_CHARGER_Sync(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 128;
+   TxHeader.StdId = STAT_CHARGER_Sync_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~255) | (((Charger_Sync >> 0) << 0) & 255);
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
@@ -232,7 +350,7 @@ void message_cantx_PROC_ETAS_VDC_Params(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 9;
+   TxHeader.StdId = PROC_ETAS_VDC_Params_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[3] = (TxData[3] & ~62) | (((VDC_Steering_Deadzone >> 0) << 1) & 62);
    TxData[0] = (TxData[0] & ~3) | (((VDC_Min_Tyre_Slip >> 4) << 0) & 3);
@@ -253,7 +371,7 @@ void message_cantx_PROC_ETAS_VDC_LapTiming(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 4;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 8;
+   TxHeader.StdId = PROC_ETAS_VDC_LapTiming_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[2] = (TxData[2] & ~127) | (((TotalTime >> 4) << 0) & 127);
    TxData[3] = (TxData[3] & ~240) | ((TotalTime << 4) & 240); 
@@ -268,16 +386,16 @@ void message_cantx_CTRL_BMS_Accu_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 34;
+   TxHeader.StdId = CTRL_BMS_Accu_Data_id;
    TxHeader.TransmitGlobalTime = DISABLE;
-   TxData[4] = (TxData[4] & ~3) | (((Average_CellTemp >> 8) << 0) & 3);
-   TxData[5] = Average_CellTemp >> 0;
-   TxData[0] = (TxData[0] & ~7) | (((Accumulator_Voltage >> 18) << 0) & 7);
-   TxData[1] = Accumulator_Voltage >> 10;
-   TxData[2] = Accumulator_Voltage >> 2;
-   TxData[3] = (TxData[3] & ~192) | ((Accumulator_Voltage << 6) & 192); 
-   TxData[3] = (TxData[3] & ~63) | (((Accumulator_Current >> 6) << 0) & 63);
-   TxData[4] = (TxData[4] & ~252) | ((Accumulator_Current << 2) & 252); 
+   TxData[4] = (TxData[4] & ~127) | (((Average_CellTemp >> 3) << 0) & 127);
+   TxData[5] = (TxData[5] & ~224) | ((Average_CellTemp << 5) & 224); 
+   TxData[0] = (TxData[0] & ~7) | (((Accumulator_Voltage >> 13) << 0) & 7);
+   TxData[1] = Accumulator_Voltage >> 5;
+   TxData[2] = (TxData[2] & ~248) | ((Accumulator_Voltage << 3) & 248); 
+   TxData[2] = (TxData[2] & ~7) | (((Accumulator_Current >> 9) << 0) & 7);
+   TxData[3] = Accumulator_Current >> 1;
+   TxData[4] = (TxData[4] & ~128) | ((Accumulator_Current << 7) & 128); 
    TxData[0] = (TxData[0] & ~32) | (((Shutdown_PackageIntck >> 0) << 5) & 32);
    TxData[0] = (TxData[0] & ~8) | (((Shutdown_IMD >> 0) << 3) & 8);
    TxData[0] = (TxData[0] & ~16) | (((Shutdown_BMS >> 0) << 4) & 16);
@@ -286,20 +404,19 @@ void message_cantx_CTRL_BMS_Accu_Data(CAN_HandleTypeDef hcan) {
 }
 
 void message_cantx_CTRL_BMS_Cell_Extremes(CAN_HandleTypeDef hcan) {
-   TxHeader.DLC = 6;
+   TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 35;
+   TxHeader.StdId = CTRL_BMS_Cell_Extremes_id;
    TxHeader.TransmitGlobalTime = DISABLE;
-   TxData[1] = (TxData[1] & ~3) | (((Highest_CellVoltage >> 12) << 0) & 3);
-   TxData[2] = Highest_CellVoltage >> 4;
-   TxData[3] = (TxData[3] & ~240) | ((Highest_CellVoltage << 4) & 240); 
-   TxData[4] = (TxData[4] & ~3) | (((Highest_CellTemp >> 8) << 0) & 3);
-   TxData[5] = Highest_CellTemp >> 0;
-   TxData[0] = (TxData[0] & ~255) | (((Lowest_CellVoltage >> 6) << 0) & 255);
-   TxData[1] = (TxData[1] & ~252) | ((Lowest_CellVoltage << 2) & 252); 
-   TxData[3] = (TxData[3] & ~15) | (((Lowest_CellTemp >> 6) << 0) & 15);
-   TxData[4] = (TxData[4] & ~252) | ((Lowest_CellTemp << 2) & 252); 
+   TxData[2] = (TxData[2] & ~255) | (((Highest_CellVoltage >> 8) << 0) & 255);
+   TxData[3] = Highest_CellVoltage >> 0;
+   TxData[5] = (TxData[5] & ~63) | (((Highest_CellTemp >> 4) << 0) & 63);
+   TxData[6] = (TxData[6] & ~240) | ((Highest_CellTemp << 4) & 240); 
+   TxData[0] = (TxData[0] & ~255) | (((Lowest_CellVoltage >> 8) << 0) & 255);
+   TxData[1] = Lowest_CellVoltage >> 0;
+   TxData[4] = (TxData[4] & ~255) | (((Lowest_CellTemp >> 2) << 0) & 255);
+   TxData[5] = (TxData[5] & ~192) | ((Lowest_CellTemp << 6) & 192); 
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
@@ -307,7 +424,7 @@ void message_cantx_STAT_DASH_Keep_Alive(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 48;
+   TxHeader.StdId = STAT_DASH_Keep_Alive_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[4] = (TxData[4] & ~255) | (((DASH_LV >> 4) << 0) & 255);
    TxData[5] = (TxData[5] & ~240) | ((DASH_LV << 4) & 240); 
@@ -323,8 +440,10 @@ void message_cantx_STAT_BMS_Keep_Alive(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 32;
+   TxHeader.StdId = STAT_BMS_Keep_Alive_id;
    TxHeader.TransmitGlobalTime = DISABLE;
+   TxData[5] = (TxData[5] & ~4) | (((IMD_OK >> 0) << 2) & 4);
+   TxData[5] = (TxData[5] & ~8) | (((BMS_OK >> 0) << 3) & 8);
    TxData[4] = (TxData[4] & ~255) | (((BMS_LV >> 4) << 0) & 255);
    TxData[5] = (TxData[5] & ~240) | ((BMS_LV << 4) & 240); 
    TxData[2] = (TxData[2] & ~15) | (((BMS_5V >> 8) << 0) & 15);
@@ -339,7 +458,7 @@ void message_cantx_PROC_ETAS_TS_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 5;
+   TxHeader.StdId = PROC_ETAS_TS_Data_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[5] = (TxData[5] & ~15) | (((Precharge_Percentage >> 3) << 0) & 15);
    TxData[6] = (TxData[6] & ~224) | ((Precharge_Percentage << 5) & 224); 
@@ -359,7 +478,7 @@ void message_cantx_PROC_ELLIPSE_Auto(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 88;
+   TxHeader.StdId = PROC_ELLIPSE_Auto_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[6] = (TxData[6] & ~1) | (((el_Track_Valid >> 0) << 0) & 1);
    TxData[6] = (TxData[6] & ~2) | (((el_Slip_Valid >> 0) << 1) & 2);
@@ -380,7 +499,7 @@ void message_cantx_CTRL_ELLIPSE_GPS_Vel(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 82;
+   TxHeader.StdId = CTRL_ELLIPSE_GPS_Vel_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~1) | (((el_Vel_GPS_N >> 15) << 0) & 1);
    TxData[1] = el_Vel_GPS_N >> 7;
@@ -398,7 +517,7 @@ void message_cantx_STAT_ETAS_Diagnostics(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 4;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 1;
+   TxHeader.StdId = STAT_ETAS_Diagnostics_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[3] = (TxData[3] & ~14) | (((InvertersAction >> 0) << 1) & 14);
    TxData[3] = (TxData[3] & ~64) | (((Relay_Error >> 0) << 6) & 64);
@@ -435,7 +554,7 @@ void message_cantx_PROC_ETAS_VDC_Values(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 6;
+   TxHeader.StdId = PROC_ETAS_VDC_Values_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[5] = (TxData[5] & ~127) | (((Inv_Speed >> 0) << 0) & 127);
    TxData[3] = (TxData[3] & ~7) | (((el_VEL >> 9) << 0) & 7);
@@ -455,7 +574,7 @@ void message_cantx_CTRL_DASH_Driver_Inputs(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 3;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 49;
+   TxHeader.StdId = CTRL_DASH_Driver_Inputs_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[2] = (TxData[2] & ~16) | (((Pump_R >> 0) << 4) & 16);
    TxData[2] = (TxData[2] & ~32) | (((Pump_L >> 0) << 5) & 32);
@@ -467,8 +586,8 @@ void message_cantx_CTRL_DASH_Driver_Inputs(CAN_HandleTypeDef hcan) {
    TxData[0] = (TxData[0] & ~56) | (((RacingMode >> 0) << 3) & 56);
    TxData[0] = (TxData[0] & ~64) | (((EnableDrive_Order >> 0) << 6) & 64);
    TxData[0] = (TxData[0] & ~128) | (((PrechargeRequest >> 0) << 7) & 128);
-   TxData[2] = (TxData[2] & ~192) | (((Refri_R >> 0) << 6) & 192);
-   TxData[1] = (TxData[1] & ~3) | (((Refri_L >> 0) << 0) & 3);
+   TxData[2] = (TxData[2] & ~192) | (((Fans_R >> 0) << 6) & 192);
+   TxData[1] = (TxData[1] & ~3) | (((Fans_L >> 0) << 0) & 3);
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
@@ -476,7 +595,7 @@ void message_cantx_CTRL_ETAS_System(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 2;
+   TxHeader.StdId = CTRL_ETAS_System_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~56) | (((Car_State >> 0) << 3) & 56);
    TxData[0] = (TxData[0] & ~2) | (((Car_OK >> 0) << 1) & 2);
@@ -489,7 +608,7 @@ void message_cantx_PROC_ELLIPSE_EKF_Pos(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 8;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 85;
+   TxHeader.StdId = PROC_ELLIPSE_EKF_Pos_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
@@ -498,7 +617,7 @@ void message_cantx_PROC_ELLIPSE_IMU_Accel(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 84;
+   TxHeader.StdId = PROC_ELLIPSE_IMU_Accel_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[4] = (TxData[4] & ~1) | (((el_Accel_Z >> 15) << 0) & 1);
    TxData[5] = el_Accel_Z >> 7;
@@ -516,7 +635,7 @@ void message_cantx_PROC_ELLIPSE_EKF_Euler(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 86;
+   TxHeader.StdId = PROC_ELLIPSE_EKF_Euler_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[4] = (TxData[4] & ~1) | (((el_YAW >> 15) << 0) & 1);
    TxData[5] = el_YAW >> 7;
@@ -534,7 +653,7 @@ void message_cantx_CTRL_ELLIPSE_EKF_Vel(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 81;
+   TxHeader.StdId = CTRL_ELLIPSE_EKF_Vel_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[4] = (TxData[4] & ~1) | (((el_Vel_EKF_Z >> 15) << 0) & 1);
    TxData[5] = el_Vel_EKF_Z >> 7;
@@ -552,7 +671,7 @@ void message_cantx_STAT_ELLIPSE_Status(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 4;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 80;
+   TxHeader.StdId = STAT_ELLIPSE_Status_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
@@ -561,7 +680,7 @@ void message_cantx_PROC_ELLIPSE_IMU_Gyro(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 87;
+   TxHeader.StdId = PROC_ELLIPSE_IMU_Gyro_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[4] = (TxData[4] & ~1) | (((el_Gyro_Z >> 15) << 0) & 1);
    TxData[5] = el_Gyro_Z >> 7;
@@ -579,7 +698,7 @@ void message_cantx_CTRL_ELLIPSE_Vel_Valid(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 83;
+   TxHeader.StdId = CTRL_ELLIPSE_Vel_Valid_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~1) | (((el_SolutionMode >> 3) << 0) & 1);
    TxData[1] = (TxData[1] & ~224) | ((el_SolutionMode << 5) & 224); 
@@ -592,7 +711,7 @@ void message_cantx_PROC_ETAS_Inverter_R_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 5;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 4;
+   TxHeader.StdId = PROC_ETAS_Inverter_R_Data_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[1] = (TxData[1] & ~63) | (((Inv_R_TempMotor >> 5) << 0) & 63);
    TxData[2] = (TxData[2] & ~248) | ((Inv_R_TempMotor << 3) & 248); 
@@ -609,7 +728,7 @@ void message_cantx_PROC_ETAS_Inverter_L_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 5;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 3;
+   TxHeader.StdId = PROC_ETAS_Inverter_L_Data_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[1] = (TxData[1] & ~63) | (((Inv_L_TempMotor >> 5) << 0) & 63);
    TxData[2] = (TxData[2] & ~248) | ((Inv_L_TempMotor << 3) & 248); 
@@ -626,7 +745,7 @@ void message_cantx_PROC_ETAS_VDC_Suspe(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 10;
+   TxHeader.StdId = PROC_ETAS_VDC_Suspe_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[5] = (TxData[5] & ~63) | (((SUSP_R_R >> 8) << 0) & 63);
    TxData[6] = SUSP_R_R >> 0;
@@ -645,7 +764,7 @@ void message_cantx_PROC_ETAS_VDC_Tq(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 4;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 7;
+   TxHeader.StdId = PROC_ETAS_VDC_Tq_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[2] = (TxData[2] & ~3) | (((Throttle_Torque >> 8) << 0) & 3);
    TxData[3] = Throttle_Torque >> 0;
@@ -660,7 +779,7 @@ void message_cantx_RAW_RECU_Data(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 3;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 113;
+   TxHeader.StdId = RAW_RECU_Data_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[0] = (TxData[0] & ~255) | (((Susp_R_R_Bits >> 4) << 0) & 255);
    TxData[1] = (TxData[1] & ~240) | ((Susp_R_R_Bits << 4) & 240); 
@@ -673,7 +792,7 @@ void message_cantx_STAT_FECU_Keep_Alive(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 64;
+   TxHeader.StdId = STAT_FECU_Keep_Alive_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[4] = (TxData[4] & ~31) | (((FECU_LV >> 7) << 0) & 31);
    TxData[5] = (TxData[5] & ~254) | ((FECU_LV << 1) & 254); 
@@ -693,7 +812,7 @@ void message_cantx_STAT_RECU_Keep_Alive(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 7;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 112;
+   TxHeader.StdId = STAT_RECU_Keep_Alive_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[4] = (TxData[4] & ~7) | (((RECU_LV >> 9) << 0) & 7);
    TxData[5] = RECU_LV >> 1;
@@ -716,7 +835,7 @@ void message_cantx_RAW_FECU_Data2(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 8;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 66;
+   TxHeader.StdId = RAW_FECU_Data2_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[6] = (TxData[6] & ~255) | (((BrakePressure2_Bits >> 4) << 0) & 255);
    TxData[7] = (TxData[7] & ~240) | ((BrakePressure2_Bits << 4) & 240); 
@@ -735,7 +854,7 @@ void message_cantx_RAW_FECU_Data1(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 6;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 65;
+   TxHeader.StdId = RAW_FECU_Data1_id;
    TxHeader.TransmitGlobalTime = DISABLE;
    TxData[4] = (TxData[4] & ~15) | (((SteeringSensor_Bits >> 8) << 0) & 15);
    TxData[5] = SteeringSensor_Bits >> 0;
@@ -752,15 +871,16 @@ void message_cantx_STAT_ETAS_Sync(CAN_HandleTypeDef hcan) {
    TxHeader.DLC = 1;
    TxHeader.IDE = 0;
    TxHeader.RTR = 0;
-   TxHeader.StdId = 0;
+   TxHeader.StdId = STAT_ETAS_Sync_id;
    TxHeader.TransmitGlobalTime = DISABLE;
-   TxData[0] = (TxData[0] & ~255) | (((ETAS_Sync >> 0) << 0) & 255);
+   TxData[0] = (TxData[0] & ~255) | (((ETAS_Sync_X >> 0) << 0) & 255);
    if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);
 }
 
 //Rx functions-------------------------------------------------------------------------------------------
 
 void message_canrx_VECTOR__INDEPENDENT_SIG_MSG(uint8_t *RxData) {
+   New_Signal_193 = ((RxData[0] & 1) << 7) | ((RxData[1] & 254) >> 1);   // Signal: New_Signal_193 Start Bit: 0, Length: 8 Byte Order: 1, Value Type: - Factor: 1 Offset: 0 Unit: V
    el_AUTO_STATUS = ((RxData[0] & 1) << 7) | ((RxData[1] & 254) >> 1);   // Signal: el_AUTO_STATUS Start Bit: 0, Length: 8 Byte Order: 1, Value Type: + Factor: 1 Offset: 0 Unit: 
    Inv_R_Iq = ((RxData[0] & 1) << 7) | ((RxData[1] & 254) >> 1);   // Signal: Inv_R_Iq Start Bit: 0, Length: 8 Byte Order: 0, Value Type: - Factor: 2.5 Offset: 0 Unit: A
    Inv_R_Icommand = ((RxData[0] & 1) << 7) | ((RxData[1] & 254) >> 1);   // Signal: Inv_R_Icommand Start Bit: 0, Length: 8 Byte Order: 0, Value Type: - Factor: 2.5 Offset: 0 Unit: A
@@ -769,18 +889,60 @@ void message_canrx_VECTOR__INDEPENDENT_SIG_MSG(uint8_t *RxData) {
    Inv_L_Icommand = ((RxData[0] & 1) << 7) | ((RxData[1] & 254) >> 1);   // Signal: Inv_L_Icommand Start Bit: 0, Length: 8 Byte Order: 0, Value Type: - Factor: 2.5 Offset: 0 Unit: A
    Inv_L_Iactual = ((RxData[0] & 1) << 7) | ((RxData[1] & 254) >> 1);   // Signal: Inv_L_Iactual Start Bit: 0, Length: 8 Byte Order: 0, Value Type: - Factor: 2.5 Offset: 0 Unit: A
    SOE = ((RxData[0] & 1) << 9) | (RxData[1] << 1) | ((RxData[2] & 128) >> 7);   // Signal: SOE Start Bit: 0, Length: 10 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: %
+   ETAS_MSG_Counter = ((RxData[0] & 1) << 15) | (RxData[1] << 7) | ((RxData[2] & 254) >> 1);   // Signal: ETAS_MSG_Counter Start Bit: 0, Length: 16 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+}
+
+void message_canrx_NM_BMS_Charger_Keep_Alive(uint8_t *RxData) {
+   BMS_Alive = ((RxData[0] & 255) >> 0);   // Signal: BMS_Alive Start Bit: 7, Length: 8 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+}
+
+void message_canrx_STAT_BMS_SFR(uint8_t *RxData) {
+   BMS_Balancing_Enable = ((RxData[2] & 64) >> 6);   // Signal: BMS_Balancing_Enable Start Bit: 22, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_Charge_Flag = ((RxData[2] & 128) >> 7);   // Signal: BMS_Charge_Flag Start Bit: 23, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_CAN_Disconnection = ((RxData[0] & 128) >> 7);   // Signal: BMS_CAN_Disconnection Start Bit: 7, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_Voltage_Disconnection = ((RxData[1] & 32) >> 5);   // Signal: BMS_Voltage_Disconnection Start Bit: 13, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_NTC_Disconnection = ((RxData[1] & 64) >> 6);   // Signal: BMS_NTC_Disconnection Start Bit: 14, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_Current_Disconnection = ((RxData[1] & 128) >> 7);   // Signal: BMS_Current_Disconnection Start Bit: 15, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_Undertemperature = ((RxData[0] & 1) >> 0);   // Signal: BMS_Undertemperature Start Bit: 0, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_Overtemperature = ((RxData[0] & 2) >> 1);   // Signal: BMS_Overtemperature Start Bit: 1, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_Overvoltage = ((RxData[0] & 4) >> 2);   // Signal: BMS_Overvoltage Start Bit: 2, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_Undervoltage = ((RxData[0] & 8) >> 3);   // Signal: BMS_Undervoltage Start Bit: 3, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   Precharge_State = ((RxData[0] & 16) >> 4);   // Signal: Precharge_State Start Bit: 4, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   AIR_Plus_State = ((RxData[0] & 32) >> 5);   // Signal: AIR_Plus_State Start Bit: 5, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   AIR_Minus_State = ((RxData[0] & 64) >> 6);   // Signal: AIR_Minus_State Start Bit: 6, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   Shutdown_PackageIntck = ((RxData[0] & 128) >> 7);   // Signal: Shutdown_PackageIntck Start Bit: 7, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
+}
+
+void message_canrx_CHARGER_Battery_Current(uint8_t *RxData) {
+   Charger_Accumulator_Current = ((RxData[0] & 255) << 16) | (RxData[1] << 8) | (RxData[2] << 0);   // Signal: Charger_Accumulator_Current Start Bit: 7, Length: 24 Byte Order: 0, Value Type: + Factor: 0.001 Offset: 0 Unit: mA
+}
+
+void message_canrx_STAT_CHARGER_Battery_Temp(uint8_t *RxData) {
+   Charger_Lowest_Cell_Temperature = ((RxData[0] & 255) << 8) | (RxData[1] << 0);   // Signal: Charger_Lowest_Cell_Temperature Start Bit: 7, Length: 16 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
+   Charger_Highest_Cell_Temperature = ((RxData[2] & 255) << 8) | (RxData[3] << 0);   // Signal: Charger_Highest_Cell_Temperature Start Bit: 23, Length: 16 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
+   Charger_Average_Cell_Temperature = ((RxData[4] & 255) << 8) | (RxData[5] << 0);   // Signal: Charger_Average_Cell_Temperature Start Bit: 39, Length: 16 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
+}
+
+void message_canrx_STAT_CHARGER_Battery_Voltages(uint8_t *RxData) {
+   Charger_Acumulator_Voltage = ((RxData[4] & 255) << 16) | (RxData[5] << 8) | (RxData[6] << 0);   // Signal: Charger_Acumulator_Voltage Start Bit: 39, Length: 24 Byte Order: 0, Value Type: + Factor: 0.001 Offset: 0 Unit: V
+   Charger_Highest_Cell_Voltage = ((RxData[2] & 255) << 8) | (RxData[3] << 0);   // Signal: Charger_Highest_Cell_Voltage Start Bit: 23, Length: 16 Byte Order: 0, Value Type: + Factor: 0.001 Offset: 0 Unit: V
+   Charger_Lowest_Cell_Voltage = ((RxData[0] & 255) << 8) | (RxData[1] << 0);   // Signal: Charger_Lowest_Cell_Voltage Start Bit: 7, Length: 16 Byte Order: 0, Value Type: + Factor: 0.001 Offset: 0 Unit: V
+}
+
+void message_canrx_STAT_CHARGER_PrechargeOK(uint8_t *RxData) {
+   Charger_PrechargeOK = ((RxData[0] & 255) >> 0);   // Signal: Charger_PrechargeOK Start Bit: 7, Length: 8 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
 }
 
 void message_canrx_STAT_BMS_AIRs_State(uint8_t *RxData) {
-   Charger_AIRs_State = ((RxData[0] & 15) >> 0);   // Signal: Charger_AIRs_State Start Bit: 3, Length: 4 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: 
+   Charger_AIRs_State = ((RxData[0] & 15) >> 0);   // Signal: Charger_AIRs_State Start Bit: 3, Length: 4 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
 }
 
 void message_canrx_CTRL_CHARGER_AIRs_Request(uint8_t *RxData) {
-   Charger_AIRs_Request = ((RxData[0] & 15) >> 0);   // Signal: Charger_AIRs_Request Start Bit: 3, Length: 4 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: 
+   Charger_AIRs_Request = ((RxData[0] & 15) >> 0);   // Signal: Charger_AIRs_Request Start Bit: 3, Length: 4 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
 }
 
 void message_canrx_STAT_CHARGER_Sync(uint8_t *RxData) {
-   Charger_Sync = ((RxData[0] & 255) >> 0);   // Signal: Charger_Sync Start Bit: 7, Length: 8 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: 
+   Charger_Sync = ((RxData[0] & 255) >> 0);   // Signal: Charger_Sync Start Bit: 7, Length: 8 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
 }
 
 void message_canrx_PROC_ETAS_VDC_Params(uint8_t *RxData) {
@@ -800,9 +962,9 @@ void message_canrx_PROC_ETAS_VDC_LapTiming(uint8_t *RxData) {
 }
 
 void message_canrx_CTRL_BMS_Accu_Data(uint8_t *RxData) {
-   Average_CellTemp = ((RxData[4] & 3) << 8) | (RxData[5] << 0);   // Signal: Average_CellTemp Start Bit: 33, Length: 10 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
-   Accumulator_Voltage = ((RxData[0] & 7) << 18) | (RxData[1] << 10) | (RxData[2] << 2) | ((RxData[3] & 192) >> 6);   // Signal: Accumulator_Voltage Start Bit: 2, Length: 21 Byte Order: 0, Value Type: + Factor: 0.00015 Offset: 340 Unit: V
-   Accumulator_Current = ((RxData[3] & 63) << 6) | ((RxData[4] & 252) >> 2);   // Signal: Accumulator_Current Start Bit: 29, Length: 12 Byte Order: 0, Value Type: + Factor: 0.19536 Offset: -400 Unit: A
+   Average_CellTemp = ((RxData[4] & 127) << 3) | ((RxData[5] & 224) >> 5);   // Signal: Average_CellTemp Start Bit: 38, Length: 10 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
+   Accumulator_Voltage = ((RxData[0] & 7) << 13) | (RxData[1] << 5) | ((RxData[2] & 248) >> 3);   // Signal: Accumulator_Voltage Start Bit: 2, Length: 16 Byte Order: 0, Value Type: + Factor: 0.01 Offset: 0 Unit: V
+   Accumulator_Current = ((RxData[2] & 7) << 9) | (RxData[3] << 1) | ((RxData[4] & 128) >> 7);   // Signal: Accumulator_Current Start Bit: 18, Length: 12 Byte Order: 0, Value Type: + Factor: 0.19536 Offset: -400 Unit: A
    Shutdown_PackageIntck = ((RxData[0] & 32) >> 5);   // Signal: Shutdown_PackageIntck Start Bit: 5, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
    Shutdown_IMD = ((RxData[0] & 8) >> 3);   // Signal: Shutdown_IMD Start Bit: 3, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
    Shutdown_BMS = ((RxData[0] & 16) >> 4);   // Signal: Shutdown_BMS Start Bit: 4, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
@@ -810,10 +972,10 @@ void message_canrx_CTRL_BMS_Accu_Data(uint8_t *RxData) {
 }
 
 void message_canrx_CTRL_BMS_Cell_Extremes(uint8_t *RxData) {
-   Highest_CellVoltage = ((RxData[1] & 3) << 12) | (RxData[2] << 4) | ((RxData[3] & 240) >> 4);   // Signal: Highest_CellVoltage Start Bit: 9, Length: 14 Byte Order: 0, Value Type: + Factor: 0.00015 Offset: 2.3 Unit: V
-   Highest_CellTemp = ((RxData[4] & 3) << 8) | (RxData[5] << 0);   // Signal: Highest_CellTemp Start Bit: 33, Length: 10 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
-   Lowest_CellVoltage = ((RxData[0] & 255) << 6) | ((RxData[1] & 252) >> 2);   // Signal: Lowest_CellVoltage Start Bit: 7, Length: 14 Byte Order: 0, Value Type: + Factor: 0.00015 Offset: 2.3 Unit: V
-   Lowest_CellTemp = ((RxData[3] & 15) << 6) | ((RxData[4] & 252) >> 2);   // Signal: Lowest_CellTemp Start Bit: 27, Length: 10 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
+   Highest_CellVoltage = ((RxData[2] & 255) << 8) | (RxData[3] << 0);   // Signal: Highest_CellVoltage Start Bit: 23, Length: 16 Byte Order: 0, Value Type: + Factor: 0.0001 Offset: 0 Unit: V
+   Highest_CellTemp = ((RxData[5] & 63) << 4) | ((RxData[6] & 240) >> 4);   // Signal: Highest_CellTemp Start Bit: 45, Length: 10 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
+   Lowest_CellVoltage = ((RxData[0] & 255) << 8) | (RxData[1] << 0);   // Signal: Lowest_CellVoltage Start Bit: 7, Length: 16 Byte Order: 0, Value Type: + Factor: 0.0001 Offset: 0 Unit: V
+   Lowest_CellTemp = ((RxData[4] & 255) << 2) | ((RxData[5] & 192) >> 6);   // Signal: Lowest_CellTemp Start Bit: 39, Length: 10 Byte Order: 0, Value Type: + Factor: 0.1 Offset: 0 Unit: ºC
 }
 
 void message_canrx_STAT_DASH_Keep_Alive(uint8_t *RxData) {
@@ -824,6 +986,8 @@ void message_canrx_STAT_DASH_Keep_Alive(uint8_t *RxData) {
 }
 
 void message_canrx_STAT_BMS_Keep_Alive(uint8_t *RxData) {
+   IMD_OK = ((RxData[5] & 4) >> 2);   // Signal: IMD_OK Start Bit: 42, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   BMS_OK = ((RxData[5] & 8) >> 3);   // Signal: BMS_OK Start Bit: 43, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
    BMS_LV = ((RxData[4] & 255) << 4) | ((RxData[5] & 240) >> 4);   // Signal: BMS_LV Start Bit: 39, Length: 12 Byte Order: 0, Value Type: + Factor: 0.008865 Offset: 0 Unit: V
    BMS_5V = ((RxData[2] & 15) << 8) | (RxData[3] << 0);   // Signal: BMS_5V Start Bit: 19, Length: 12 Byte Order: 0, Value Type: + Factor: 0.001394 Offset: 0 Unit: V
    BMS_12V = ((RxData[1] & 255) << 4) | ((RxData[2] & 240) >> 4);   // Signal: BMS_12V Start Bit: 15, Length: 12 Byte Order: 0, Value Type: + Factor: 0.00459 Offset: 0 Unit: V
@@ -842,9 +1006,9 @@ void message_canrx_PROC_ELLIPSE_Auto(uint8_t *RxData) {
    el_Track_Valid = ((RxData[6] & 1) >> 0);   // Signal: el_Track_Valid Start Bit: 48, Length: 1 Byte Order: 1, Value Type: + Factor: 1 Offset: 0 Unit: Bit
    el_Slip_Valid = ((RxData[6] & 2) >> 1);   // Signal: el_Slip_Valid Start Bit: 49, Length: 1 Byte Order: 1, Value Type: + Factor: 1 Offset: 0 Unit: Bit
    el_Curvature_Valid = ((RxData[6] & 4) >> 2);   // Signal: el_Curvature_Valid Start Bit: 50, Length: 1 Byte Order: 1, Value Type: + Factor: 1 Offset: 0 Unit: Bit
-   el_SlipAngle = ((RxData[2] & 1) << 15) | (RxData[3] << 7) | ((RxData[4] & 254) >> 1);   // Signal: el_SlipAngle Start Bit: 16, Length: 16 Byte Order: 1, Value Type: - Factor: 0.00572958 Offset: 0 Unit: º
+   el_SlipAngle = ((RxData[2] & 1) << 15) | (RxData[3] << 7) | ((RxData[4] & 254) >> 1);   // Signal: el_SlipAngle Start Bit: 16, Length: 16 Byte Order: 1, Value Type: - Factor: 0.0001 Offset: 0 Unit: rad
    el_CurvatureRadius = ((RxData[4] & 1) << 15) | (RxData[5] << 7) | ((RxData[6] & 254) >> 1);   // Signal: el_CurvatureRadius Start Bit: 32, Length: 16 Byte Order: 1, Value Type: + Factor: 0.01 Offset: 0 Unit: m
-   el_AngleTrack = ((RxData[0] & 1) << 15) | (RxData[1] << 7) | ((RxData[2] & 254) >> 1);   // Signal: el_AngleTrack Start Bit: 0, Length: 16 Byte Order: 1, Value Type: - Factor: 0.00572958 Offset: 0 Unit: º
+   el_AngleTrack = ((RxData[0] & 1) << 15) | (RxData[1] << 7) | ((RxData[2] & 254) >> 1);   // Signal: el_AngleTrack Start Bit: 0, Length: 16 Byte Order: 1, Value Type: - Factor: 0.0001 Offset: 0 Unit: rad
 }
 
 void message_canrx_CTRL_ELLIPSE_GPS_Vel(uint8_t *RxData) {
@@ -894,8 +1058,8 @@ void message_canrx_PROC_ETAS_VDC_Values(uint8_t *RxData) {
 }
 
 void message_canrx_CTRL_DASH_Driver_Inputs(uint8_t *RxData) {
-   Pump_R = ((RxData[2] & 16) >> 4);   // Signal: Pump_R Start Bit: 20, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: 
-   Pump_L = ((RxData[2] & 32) >> 5);   // Signal: Pump_L Start Bit: 21, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: 
+   Pump_R = ((RxData[2] & 16) >> 4);   // Signal: Pump_R Start Bit: 20, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
+   Pump_L = ((RxData[2] & 32) >> 5);   // Signal: Pump_L Start Bit: 21, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
    Button_2 = ((RxData[2] & 4) >> 2);   // Signal: Button_2 Start Bit: 18, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
    Button_1 = ((RxData[2] & 8) >> 3);   // Signal: Button_1 Start Bit: 19, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
    TV_Level = ((RxData[1] & 28) >> 2);   // Signal: TV_Level Start Bit: 12, Length: 3 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
@@ -904,8 +1068,8 @@ void message_canrx_CTRL_DASH_Driver_Inputs(uint8_t *RxData) {
    RacingMode = ((RxData[0] & 56) >> 3);   // Signal: RacingMode Start Bit: 5, Length: 3 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
    EnableDrive_Order = ((RxData[0] & 64) >> 6);   // Signal: EnableDrive_Order Start Bit: 6, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
    PrechargeRequest = ((RxData[0] & 128) >> 7);   // Signal: PrechargeRequest Start Bit: 7, Length: 1 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: Bit
-   Refri_R = ((RxData[2] & 192) >> 6);   // Signal: Refri_R Start Bit: 23, Length: 2 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
-   Refri_L = ((RxData[1] & 3) >> 0);   // Signal: Refri_L Start Bit: 9, Length: 2 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   Fans_R = ((RxData[2] & 192) >> 6);   // Signal: Fans_R Start Bit: 23, Length: 2 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   Fans_L = ((RxData[1] & 3) >> 0);   // Signal: Fans_L Start Bit: 9, Length: 2 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
 }
 
 void message_canrx_CTRL_ETAS_System(uint8_t *RxData) {
@@ -925,9 +1089,9 @@ void message_canrx_PROC_ELLIPSE_IMU_Accel(uint8_t *RxData) {
 }
 
 void message_canrx_PROC_ELLIPSE_EKF_Euler(uint8_t *RxData) {
-   el_YAW = ((RxData[4] & 1) << 15) | (RxData[5] << 7) | ((RxData[6] & 254) >> 1);   // Signal: el_YAW Start Bit: 32, Length: 16 Byte Order: 1, Value Type: - Factor: 0.00572958 Offset: 0 Unit: º
-   el_Pitch = ((RxData[2] & 1) << 15) | (RxData[3] << 7) | ((RxData[4] & 254) >> 1);   // Signal: el_Pitch Start Bit: 16, Length: 16 Byte Order: 1, Value Type: - Factor: 0.00572958 Offset: 0 Unit: º
-   el_Roll = ((RxData[0] & 1) << 15) | (RxData[1] << 7) | ((RxData[2] & 254) >> 1);   // Signal: el_Roll Start Bit: 0, Length: 16 Byte Order: 1, Value Type: - Factor: 0.00572958 Offset: 0 Unit: º
+   el_YAW = ((RxData[4] & 1) << 15) | (RxData[5] << 7) | ((RxData[6] & 254) >> 1);   // Signal: el_YAW Start Bit: 32, Length: 16 Byte Order: 1, Value Type: - Factor: 0.0001 Offset: 0 Unit: rad
+   el_Pitch = ((RxData[2] & 1) << 15) | (RxData[3] << 7) | ((RxData[4] & 254) >> 1);   // Signal: el_Pitch Start Bit: 16, Length: 16 Byte Order: 1, Value Type: - Factor: 0.0001 Offset: 0 Unit: rad
+   el_Roll = ((RxData[0] & 1) << 15) | (RxData[1] << 7) | ((RxData[2] & 254) >> 1);   // Signal: el_Roll Start Bit: 0, Length: 16 Byte Order: 1, Value Type: - Factor: 0.0001 Offset: 0 Unit: rad
 }
 
 void message_canrx_CTRL_ELLIPSE_EKF_Vel(uint8_t *RxData) {
@@ -940,9 +1104,9 @@ void message_canrx_STAT_ELLIPSE_Status(uint8_t *RxData) {
 }
 
 void message_canrx_PROC_ELLIPSE_IMU_Gyro(uint8_t *RxData) {
-   el_Gyro_Z = ((RxData[4] & 1) << 15) | (RxData[5] << 7) | ((RxData[6] & 254) >> 1);   // Signal: el_Gyro_Z Start Bit: 32, Length: 16 Byte Order: 1, Value Type: - Factor: 0.0572958 Offset: 0 Unit: º/s
-   el_Gyro_Y = ((RxData[2] & 1) << 15) | (RxData[3] << 7) | ((RxData[4] & 254) >> 1);   // Signal: el_Gyro_Y Start Bit: 16, Length: 16 Byte Order: 1, Value Type: - Factor: 0.0572958 Offset: 0 Unit: º/s
-   el_Gyro_X = ((RxData[0] & 1) << 15) | (RxData[1] << 7) | ((RxData[2] & 254) >> 1);   // Signal: el_Gyro_X Start Bit: 0, Length: 16 Byte Order: 1, Value Type: - Factor: 0.0572958 Offset: 0 Unit: º/s
+   el_Gyro_Z = ((RxData[4] & 1) << 15) | (RxData[5] << 7) | ((RxData[6] & 254) >> 1);   // Signal: el_Gyro_Z Start Bit: 32, Length: 16 Byte Order: 1, Value Type: - Factor: 0.001 Offset: 0 Unit: º/s
+   el_Gyro_Y = ((RxData[2] & 1) << 15) | (RxData[3] << 7) | ((RxData[4] & 254) >> 1);   // Signal: el_Gyro_Y Start Bit: 16, Length: 16 Byte Order: 1, Value Type: - Factor: 0.001 Offset: 0 Unit: º/s
+   el_Gyro_X = ((RxData[0] & 1) << 15) | (RxData[1] << 7) | ((RxData[2] & 254) >> 1);   // Signal: el_Gyro_X Start Bit: 0, Length: 16 Byte Order: 1, Value Type: - Factor: 0.001 Offset: 0 Unit: º/s
 }
 
 void message_canrx_CTRL_ELLIPSE_Vel_Valid(uint8_t *RxData) {
@@ -1021,5 +1185,5 @@ void message_canrx_RAW_FECU_Data1(uint8_t *RxData) {
 }
 
 void message_canrx_STAT_ETAS_Sync(uint8_t *RxData) {
-   ETAS_Sync = ((RxData[0] & 255) >> 0);   // Signal: ETAS_Sync Start Bit: 7, Length: 8 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
+   ETAS_Sync_X = ((RxData[0] & 255) >> 0);   // Signal: ETAS_Sync_X Start Bit: 7, Length: 8 Byte Order: 0, Value Type: + Factor: 1 Offset: 0 Unit: -
 }

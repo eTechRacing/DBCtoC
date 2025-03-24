@@ -33,7 +33,9 @@ NS_ :
 
 BS_:
 
-BU_: BMS DashBoard Ellipse Front_ECU Rear_ECU ETAS_ES910
+BU_: Charger BMS DashBoard Ellipse Front_ECU Rear_ECU ETAS_ES910
+VAL_TABLE_ Pumps 1 "ON" 0 "OFF" ;
+VAL_TABLE_ AIRs_Req_Charger 9 "Charger" 8 "Charger" 6 "PRECHARGE" 3 "CLOSE" 0 "OPEN" ;
 VAL_TABLE_ Car_State 7 "OPEN AIRs" 6 "RTD" 5 "ENABLE INVERTERS" 4 "TS ACTIVE" 3 "PRECHARGE DONE" 2 "PRECHARGE INIT" 1 "STANDBY" 0 "INIT" ;
 VAL_TABLE_ AIRs_Req 2 "CLOSE" 1 "PRECHARGE" 0 "OPEN" ;
 VAL_TABLE_ Button 1 "Pressed" 0 "Not Pressed" ;
@@ -44,7 +46,7 @@ VAL_TABLE_ InvertersAction 4 "TorqueCommand" 3 "EnableDrive" 2 "DisableDrive" 1 
 VAL_TABLE_ Regen_Enable 1 "Enabled" 0 "Not Enabled" ;
 VAL_TABLE_ Error 1 "ERROR" 0 "OK" ;
 VAL_TABLE_ TC_Warning 1 "TC" 0 "NO TC" ;
-VAL_TABLE_ Sensorics_Mode 4 "Rigid Axle" 3 "Steering TV" 2 "Rigid Axle TC" 1 "TV + TC" ;
+VAL_TABLE_ Sensorics_Mode 0 "TV + TC" 3 "Rigid Axle" 2 "Steering TV" 1 "Rigid Axle TC" ;
 VAL_TABLE_ OK_Sig 1 "OK" 0 "ERROR" ;
 VAL_TABLE_ APPS_Implausibility 1 "ERROR" 0 "OK" ;
 VAL_TABLE_ Critical_Signal_Disc 1 "Disconnected" 0 "Connected" ;
@@ -57,7 +59,7 @@ VAL_TABLE_ Shutdown_BMS 1 "OK" 0 "OPENED" ;
 VAL_TABLE_ AIRs_State 2 "Closed AIRs" 1 "Precharge" 0 "Opened AIRs" ;
 VAL_TABLE_ Ellipse_Solution 4 "Navigation Position" 3 "Navigation Velocity" 2 "AHRS" 1 "Vertical gyro" 0 "Uninitialized" ;
 VAL_TABLE_ Ellipse_Valid 1 "Valid" 0 "Not Valid" ;
-VAL_TABLE_ Refri 2 "FULL" 1 "OFF" 0 "ON" ;
+VAL_TABLE_ Refri 2 "FULL" 1 "ON" 0 "OFF" ;
 VAL_TABLE_ BrakeLight_Control 1 "ON" 0 "OFF" ;
 VAL_TABLE_ Shutdown_TSMS_TSMP 1 "OK" 0 "OPENED" ;
 VAL_TABLE_ Shutdown_HVD 1 "OK" 0 "OPENED" ;
@@ -70,6 +72,7 @@ VAL_TABLE_ Shutdown_Setas 1 "OK" 0 "OPENED" ;
 
 
 BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ New_Signal_193 : 0|8@1- (1,0) [0|0] "V" Vector__XXX
  SG_ el_AUTO_STATUS : 0|8@1+ (1,0) [0|255] "" Vector__XXX
  SG_ Inv_R_Iq : 0|8@0- (2.5,0) [-320|317.5] "A" Vector__XXX
  SG_ Inv_R_Icommand : 0|8@0- (2.5,0) [-320|317.5] "A" Vector__XXX
@@ -78,15 +81,51 @@ BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ Inv_L_Icommand : 0|8@0- (2.5,0) [-320|317.5] "A" Vector__XXX
  SG_ Inv_L_Iactual : 0|8@0- (2.5,0) [-320|317.5] "A" Vector__XXX
  SG_ SOE : 0|10@0+ (0.1,0) [0|102.3] "%" Vector__XXX
+ SG_ ETAS_MSG_Counter : 0|16@0+ (1,0) [0|65535] "-" Vector__XXX
 
-BO_ 145 STAT_BMS_AIRs_State: 1 Vector__XXX
- SG_ Charger_AIRs_State : 3|4@0+ (1,0) [-8|7] "" Vector__XXX
+BO_ 159 NM_BMS_Charger_Keep_Alive: 1 Vector__XXX
+ SG_ BMS_Alive : 7|8@0+ (1,0) [0|255] "-" Vector__XXX
 
-BO_ 144 CTRL_CHARGER_AIRs_Request: 1 Vector__XXX
- SG_ Charger_AIRs_Request : 3|4@0+ (1,0) [0|15] "" Vector__XXX
+BO_ 149 STAT_BMS_SFR: 3 Vector__XXX
+ SG_ BMS_Balancing_Enable : 22|1@0+ (1,0) [0|1] "-" Vector__XXX
+ SG_ BMS_Charge_Flag : 23|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ BMS_CAN_Disconnection : 7|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ BMS_Voltage_Disconnection : 13|1@0+ (1,0) [0|1] "-" Vector__XXX
+ SG_ BMS_NTC_Disconnection : 14|1@0+ (1,0) [0|1] "-" Vector__XXX
+ SG_ BMS_Current_Disconnection : 15|1@0+ (1,0) [0|1] "-" Vector__XXX
+ SG_ BMS_Undertemperature : 0|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ BMS_Overtemperature : 1|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ BMS_Overvoltage : 2|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ BMS_Undervoltage : 3|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ Precharge_State : 4|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ AIR_Plus_State : 5|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ AIR_Minus_State : 6|1@0+ (1,0) [0|0] "-" Vector__XXX
+ SG_ Shutdown_PackageIntck : 7|1@0+ (1,0) [0|1] "Bit" Vector__XXX
 
-BO_ 128 STAT_CHARGER_Sync: 1 Vector__XXX
- SG_ Charger_Sync : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+BO_ 148 CHARGER_Battery_Current: 3 Vector__XXX
+ SG_ Charger_Accumulator_Current : 7|24@0+ (0.001,0) [0|16777.215] "mA" Vector__XXX
+
+BO_ 147 STAT_CHARGER_Battery_Temp: 6 Vector__XXX
+ SG_ Charger_Lowest_Cell_Temperature : 7|16@0+ (0.1,0) [0|6553.5] "ºC" Vector__XXX
+ SG_ Charger_Highest_Cell_Temperature : 23|16@0+ (0.1,0) [0|6553.5] "ºC" Vector__XXX
+ SG_ Charger_Average_Cell_Temperature : 39|16@0+ (0.1,0) [0|6553.5] "ºC" Vector__XXX
+
+BO_ 146 STAT_CHARGER_Battery_Voltages: 7 Vector__XXX
+ SG_ Charger_Acumulator_Voltage : 39|24@0+ (0.001,0) [0|16777.215] "V" Vector__XXX
+ SG_ Charger_Highest_Cell_Voltage : 23|16@0+ (0.001,0) [0|65.535] "V" Vector__XXX
+ SG_ Charger_Lowest_Cell_Voltage : 7|16@0+ (0.001,0) [0|65.535] "V" Vector__XXX
+
+BO_ 271 STAT_CHARGER_PrechargeOK: 1 Charger
+ SG_ Charger_PrechargeOK : 7|8@0+ (1,0) [0|255] "-" Vector__XXX
+
+BO_ 145 STAT_BMS_AIRs_State: 1 BMS
+ SG_ Charger_AIRs_State : 3|4@0+ (1,0) [0|15] "-" Vector__XXX
+
+BO_ 144 CTRL_CHARGER_AIRs_Request: 1 Charger
+ SG_ Charger_AIRs_Request : 3|4@0+ (1,0) [0|15] "-" Vector__XXX
+
+BO_ 128 STAT_CHARGER_Sync: 1 Charger
+ SG_ Charger_Sync : 7|8@0+ (1,0) [0|255] "-" Vector__XXX
 
 BO_ 9 PROC_ETAS_VDC_Params: 6 ETAS_ES910
  SG_ VDC_Steering_Deadzone : 29|5@0+ (1,0) [0|31] "º" Vector__XXX
@@ -102,20 +141,20 @@ BO_ 8 PROC_ETAS_VDC_LapTiming: 4 ETAS_ES910
  SG_ LapCount : 12|6@0+ (1,1) [1|64] "s" Vector__XXX
  SG_ LapTime : 7|11@0+ (0.1,0) [0|204.7] "s" Vector__XXX
 
-BO_ 34 CTRL_BMS_Accu_Data: 6 Vector__XXX
- SG_ Average_CellTemp : 33|10@0+ (0.1,0) [0|102.3] "ºC" Vector__XXX
- SG_ Accumulator_Voltage : 2|21@0+ (0.00015,340) [340|654.57265] "V" Vector__XXX
- SG_ Accumulator_Current : 29|12@0+ (0.19536,-400) [-400|399.9992] "A" Vector__XXX
+BO_ 34 CTRL_BMS_Accu_Data: 6 BMS
+ SG_ Average_CellTemp : 38|10@0+ (0.1,0) [0|102.3] "ºC" Vector__XXX
+ SG_ Accumulator_Voltage : 2|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
+ SG_ Accumulator_Current : 18|12@0+ (0.19536,-400) [-400|399.9992] "A" Vector__XXX
  SG_ Shutdown_PackageIntck : 5|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ Shutdown_IMD : 3|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ Shutdown_BMS : 4|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ AIRs_State : 7|2@0+ (1,0) [0|3] "-" Vector__XXX
 
-BO_ 35 CTRL_BMS_Cell_Extremes: 6 BMS
- SG_ Highest_CellVoltage : 9|14@0+ (0.00015,2.3) [2.3|4.75745] "V" Vector__XXX
- SG_ Highest_CellTemp : 33|10@0+ (0.1,0) [0|102.3] "ºC" Vector__XXX
- SG_ Lowest_CellVoltage : 7|14@0+ (0.00015,2.3) [2.3|4.75745] "V" Vector__XXX
- SG_ Lowest_CellTemp : 27|10@0+ (0.1,0) [0|102.3] "ºC" Vector__XXX
+BO_ 35 CTRL_BMS_Cell_Extremes: 7 BMS
+ SG_ Highest_CellVoltage : 23|16@0+ (0.0001,0) [0|9.83025] "V" Vector__XXX
+ SG_ Highest_CellTemp : 45|10@0+ (0.1,0) [0|102.3] "ºC" Vector__XXX
+ SG_ Lowest_CellVoltage : 7|16@0+ (0.0001,0) [0|9.83025] "V" Vector__XXX
+ SG_ Lowest_CellTemp : 39|10@0+ (0.1,0) [0|102.3] "ºC" Vector__XXX
 
 BO_ 48 STAT_DASH_Keep_Alive: 6 DashBoard
  SG_ DASH_LV : 39|12@0+ (0.008865,0) [0|36.302175] "V" Vector__XXX
@@ -124,6 +163,8 @@ BO_ 48 STAT_DASH_Keep_Alive: 6 DashBoard
  SG_ Dash_Alive : 7|8@0+ (1,0) [0|255] "-" Vector__XXX
 
 BO_ 32 STAT_BMS_Keep_Alive: 6 BMS
+ SG_ IMD_OK : 42|1@0+ (1,0) [0|1] "-" Vector__XXX
+ SG_ BMS_OK : 43|1@0+ (1,0) [0|1] "-" Vector__XXX
  SG_ BMS_LV : 39|12@0+ (0.008865,0) [0|36.302175] "V" Vector__XXX
  SG_ BMS_5V : 19|12@0+ (0.001394,0) [0|5.70843] "V" Vector__XXX
  SG_ BMS_12V : 15|12@0+ (0.00459,0) [0|18.79605] "V" Vector__XXX
@@ -140,9 +181,9 @@ BO_ 88 PROC_ELLIPSE_Auto: 7 Ellipse
  SG_ el_Track_Valid : 48|1@1+ (1,0) [0|1] "Bit"  ETAS_ES910
  SG_ el_Slip_Valid : 49|1@1+ (1,0) [0|1] "Bit"  ETAS_ES910
  SG_ el_Curvature_Valid : 50|1@1+ (1,0) [0|1] "Bit"  ETAS_ES910
- SG_ el_SlipAngle : 16|16@1- (0.00572958,0) [-187.74687744|187.74114786] "º"  ETAS_ES910
+ SG_ el_SlipAngle : 16|16@1- (0.0001,0) [-3.2768|3.2767] "rad"  ETAS_ES910
  SG_ el_CurvatureRadius : 32|16@1+ (0.01,0) [0|655.35] "m"  ETAS_ES910
- SG_ el_AngleTrack : 0|16@1- (0.00572958,0) [-187.74687744|187.74114786] "º"  ETAS_ES910
+ SG_ el_AngleTrack : 0|16@1- (0.0001,0) [-3.2768|3.2767] "rad"  ETAS_ES910
 
 BO_ 82 CTRL_ELLIPSE_GPS_Vel: 6 Vector__XXX
  SG_ el_Vel_GPS_N : 0|16@1- (0.01,0) [-327.68|327.67] "m/s"  ETAS_ES910
@@ -188,8 +229,8 @@ BO_ 6 PROC_ETAS_VDC_Values: 6 ETAS_ES910
  SG_ APPS1_Value : 7|7@0+ (0.01,0) [0|1] "1%" Vector__XXX
 
 BO_ 49 CTRL_DASH_Driver_Inputs: 3 DashBoard
- SG_ Pump_R : 20|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ Pump_L : 21|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Pump_R : 20|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Pump_L : 21|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ Button_2 : 18|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ Button_1 : 19|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ TV_Level : 12|3@0+ (1,0) [0|7] "-" Vector__XXX
@@ -198,8 +239,8 @@ BO_ 49 CTRL_DASH_Driver_Inputs: 3 DashBoard
  SG_ RacingMode : 5|3@0+ (1,0) [0|7] "-" Vector__XXX
  SG_ EnableDrive_Order : 6|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ PrechargeRequest : 7|1@0+ (1,0) [0|1] "Bit" Vector__XXX
- SG_ Refri_R : 23|2@0+ (1,0) [0|3] "-" Vector__XXX
- SG_ Refri_L : 9|2@0+ (1,0) [0|3] "-" Vector__XXX
+ SG_ Fans_R : 23|2@0+ (1,0) [0|3] "-" Vector__XXX
+ SG_ Fans_L : 9|2@0+ (1,0) [0|3] "-" Vector__XXX
 
 BO_ 2 CTRL_ETAS_System: 1 ETAS_ES910
  SG_ Car_State : 5|3@0+ (1,0) [0|7] "-" Vector__XXX
@@ -217,9 +258,9 @@ BO_ 84 PROC_ELLIPSE_IMU_Accel: 6 Ellipse
  SG_ el_Accel_X : 0|16@1- (0.01,0) [-327.68|327.67] "m/s2"  ETAS_ES910
 
 BO_ 86 PROC_ELLIPSE_EKF_Euler: 6 Ellipse
- SG_ el_YAW : 32|16@1- (0.00572958,0) [-187.74687744|187.74114786] "º"  ETAS_ES910
- SG_ el_Pitch : 16|16@1- (0.00572958,0) [-187.74687744|187.74114786] "º"  ETAS_ES910
- SG_ el_Roll : 0|16@1- (0.00572958,0) [-187.74687744|187.74114786] "º"  ETAS_ES910
+ SG_ el_YAW : 32|16@1- (0.0001,0) [-3.2768|3.2767] "rad"  ETAS_ES910
+ SG_ el_Pitch : 16|16@1- (0.0001,0) [-3.2768|3.2767] "rad"  ETAS_ES910
+ SG_ el_Roll : 0|16@1- (0.0001,0) [-3.2768|3.2767] "rad"  ETAS_ES910
 
 BO_ 81 CTRL_ELLIPSE_EKF_Vel: 6 Ellipse
  SG_ el_Vel_EKF_Z : 32|16@1- (0.01,0) [-327.68|327.67] "m/s"  ETAS_ES910
@@ -230,9 +271,9 @@ BO_ 80 STAT_ELLIPSE_Status: 4 Ellipse
  SG_ Ellipse_Alive : 0|32@1+ (1E-06,0) [0|4294.967295] "s"  ETAS_ES910
 
 BO_ 87 PROC_ELLIPSE_IMU_Gyro: 6 Ellipse
- SG_ el_Gyro_Z : 32|16@1- (0.0572958,0) [-1877.4687744|1877.4114786] "º/s"  ETAS_ES910
- SG_ el_Gyro_Y : 16|16@1- (0.0572958,0) [-1877.4687744|1877.4114786] "º/s"  ETAS_ES910
- SG_ el_Gyro_X : 0|16@1- (0.0572958,0) [-1877.4687744|1877.4114786] "º/s"  ETAS_ES910
+ SG_ el_Gyro_Z : 32|16@1- (0.001,0) [-32.768|32.767] "º/s"  ETAS_ES910
+ SG_ el_Gyro_Y : 16|16@1- (0.001,0) [-32.768|32.767] "º/s"  ETAS_ES910
+ SG_ el_Gyro_X : 0|16@1- (0.001,0) [-32.768|32.767] "º/s"  ETAS_ES910
 
 BO_ 83 CTRL_ELLIPSE_Vel_Valid: 6 Ellipse
  SG_ el_SolutionMode : 0|4@1+ (1,0) [0|15] "-"  ETAS_ES910
@@ -300,12 +341,18 @@ BO_ 65 RAW_FECU_Data1: 6 Front_ECU
  SG_ APPS1_Bits : 7|12@0+ (1,0) [0|4095] "Bits"  ETAS_ES910
 
 BO_ 0 STAT_ETAS_Sync: 1 ETAS_ES910
- SG_ ETAS_Sync : 7|8@0+ (1,0) [0|255] "-" Vector__XXX
+ SG_ ETAS_Sync_X : 7|8@0+ (1,0) [0|255] "-" Vector__XXX
 
 
 
 CM_ BO_ 3221225472 "This is a message for not used signals, created by Vector CANdb++ DBC OLE DB Provider.";
 CM_ SG_ 3221225472 SOE "[0 - 100]";
+CM_ SG_ 159 BMS_Alive "[0 - 255]";
+CM_ SG_ 149 Shutdown_PackageIntck "[0, 1]";
+CM_ SG_ 271 Charger_PrechargeOK "-";
+CM_ SG_ 145 Charger_AIRs_State "[0, 3, 6, 8, 9]";
+CM_ SG_ 144 Charger_AIRs_Request "[0, 3, 6, 8, 9]";
+CM_ SG_ 128 Charger_Sync "[0 - 255]";
 CM_ SG_ 9 VDC_Steering_Deadzone "(0 - 31)";
 CM_ SG_ 9 VDC_Min_Tyre_Slip "[1 - 1.5)";
 CM_ SG_ 9 VDC_Max_Tyre_Slip "[1 - 1.5)";
@@ -323,7 +370,13 @@ CM_ SG_ 35 Highest_CellVoltage "[2.8 - 4.16]";
 CM_ SG_ 35 Highest_CellTemp "[18 - 60]";
 CM_ SG_ 35 Lowest_CellVoltage "[2.8 - 4.16]";
 CM_ SG_ 35 Lowest_CellTemp "[18 - 60]";
+CM_ SG_ 48 DASH_LV "[0 - 30]";
+CM_ SG_ 48 DASH_5V "[0 - 5]";
+CM_ SG_ 48 DASH_3V3 "[0 - 3.3]";
 CM_ SG_ 48 Dash_Alive "[0 - 255]";
+CM_ SG_ 32 BMS_LV "[0 - 30]";
+CM_ SG_ 32 BMS_5V "[0 - 5]";
+CM_ SG_ 32 BMS_12V "[0 - 12]";
 CM_ SG_ 32 BMS_Alive "[0 - 255]";
 CM_ SG_ 5 Precharge_Percentage "[0 - 100]";
 CM_ SG_ 5 Power "[-70 - 70]";
@@ -333,9 +386,9 @@ CM_ SG_ 5 SOC_Avg "[0 - 100]";
 CM_ SG_ 88 el_Track_Valid "[0, 1]";
 CM_ SG_ 88 el_Slip_Valid "[0, 1]";
 CM_ SG_ 88 el_Curvature_Valid "[0, 1]";
-CM_ SG_ 88 el_SlipAngle "[-180 - 180]";
+CM_ SG_ 88 el_SlipAngle "[-pi - pi]";
 CM_ SG_ 88 el_CurvatureRadius "[+0]";
-CM_ SG_ 88 el_AngleTrack "[-180 - 180]";
+CM_ SG_ 88 el_AngleTrack "[-pi - pi]";
 CM_ SG_ 82 el_Vel_GPS_N "(-inf, +inf)";
 CM_ SG_ 82 el_Vel_GPS_E "(-inf, +inf)";
 CM_ SG_ 82 el_Vel_GPS_D "(-inf, +inf)";
@@ -367,10 +420,14 @@ CM_ SG_ 1 Disconnection_BrakePedal "[0, 1]";
 CM_ SG_ 1 Disconnection_BMS "[0, 1]";
 CM_ SG_ 1 Disconnection_APPS2 "[0, 1]";
 CM_ SG_ 1 Disconnection_APPS1 "[0, 1]";
+CM_ SG_ 6 Inv_Speed "[+0]";
+CM_ SG_ 6 el_VEL "[+0]";
 CM_ SG_ 6 SteeringSensor_Value "[-120 - 120]";
 CM_ SG_ 6 BrakePedal_Value "[0 - 1]";
 CM_ SG_ 6 APPS2_Value "[0 - 1]";
 CM_ SG_ 6 APPS1_Value "[0 - 1]";
+CM_ SG_ 49 Pump_R "[0, 1]";
+CM_ SG_ 49 Pump_L "[0, 1]";
 CM_ SG_ 49 Button_2 "[0, 1]";
 CM_ SG_ 49 Button_1 "[0, 1]";
 CM_ SG_ 49 TV_Level "[0 - 7]";
@@ -379,8 +436,8 @@ CM_ SG_ 49 Driver "[1, 2, 3, 4, 5]";
 CM_ SG_ 49 RacingMode "[1, 2, 3, 4, 5]";
 CM_ SG_ 49 EnableDrive_Order "[0, 1]";
 CM_ SG_ 49 PrechargeRequest "[0, 1]";
-CM_ SG_ 49 Refri_R "[0, 1, 2]";
-CM_ SG_ 49 Refri_L "[0, 1, 2]";
+CM_ SG_ 49 Fans_R "[0, 1, 2]";
+CM_ SG_ 49 Fans_L "[0, 1, 2]";
 CM_ SG_ 2 Car_State "[0 - 7]";
 CM_ SG_ 2 Car_OK "[0, 1]";
 CM_ SG_ 2 AIRs_Request "[0, 1, 2]";
@@ -388,9 +445,9 @@ CM_ SG_ 2 BrakeLight_Control "[0, 1]";
 CM_ SG_ 84 el_Accel_Z "(-inf, +inf)";
 CM_ SG_ 84 el_Accel_Y "(-inf, +inf)";
 CM_ SG_ 84 el_Accel_X "(-inf, +inf)";
-CM_ SG_ 86 el_YAW "[-180 - 180]";
-CM_ SG_ 86 el_Pitch "[-90 - 90]";
-CM_ SG_ 86 el_Roll "[-180 - 180]";
+CM_ SG_ 86 el_YAW "[-pi - pi]";
+CM_ SG_ 86 el_Pitch "[-pi/2 - pi/2]";
+CM_ SG_ 86 el_Roll "[-pi - pi]";
 CM_ SG_ 81 el_Vel_EKF_Z "(-inf, +inf)";
 CM_ SG_ 81 el_Vel_EKF_Y "(-inf, +inf)";
 CM_ SG_ 81 el_Vel_EKF_X "(-inf, +inf)";
@@ -414,10 +471,16 @@ CM_ SG_ 7 Torque_R "[-27 - 27]";
 CM_ SG_ 7 Torque_L "[-27 - 27]";
 CM_ SG_ 113 Susp_R_R_Bits "[0 - 4095]";
 CM_ SG_ 113 Susp_R_L_Bits "[0 - 4095]";
+CM_ SG_ 64 FECU_LV "[0 - 30]";
+CM_ SG_ 64 FECU_5V "[0 - 5]";
+CM_ SG_ 64 FECU_3V3 "[0 - 3.3]";
 CM_ SG_ 64 Shutdown_Setas "[0, 1]";
 CM_ SG_ 64 Shutdown_SC_BOTS "[0, 1]";
 CM_ SG_ 64 Shutdown_BSPD_Inertia "[0, 1]";
 CM_ SG_ 64 Front_Alive "[0 - 255]";
+CM_ SG_ 112 RECU_LV "[0 - 30]";
+CM_ SG_ 112 RECU_5V "[0 - 5]";
+CM_ SG_ 112 RECU_3V3 "[0 - 3.3]";
 CM_ SG_ 112 Shutdown_TSMS_TSMP "[0, 1]";
 CM_ SG_ 112 Shutdown_RightTS "[0, 1]";
 CM_ SG_ 112 Shutdown_LeftTS "[0, 1]";
@@ -433,9 +496,12 @@ CM_ SG_ 65 SteeringSensor_Bits "[0 - 4095]";
 CM_ SG_ 65 BrakePedal_Bits "[0 - 4095]";
 CM_ SG_ 65 APPS2_Bits "[0 - 4095]";
 CM_ SG_ 65 APPS1_Bits "[0 - 4095]";
-CM_ SG_ 0 ETAS_Sync "[0 - 255]";
+CM_ SG_ 0 ETAS_Sync_X "[0 - 255]";
 BA_DEF_  "BusType" STRING ;
 BA_DEF_DEF_  "BusType" "CAN";
+VAL_ 149 Shutdown_PackageIntck 1 "OK" 0 "OPENED" ;
+VAL_ 145 Charger_AIRs_State 9 "Charger" 8 "Charger" 6 "PRECHARGE" 3 "CLOSE" 0 "OPEN" ;
+VAL_ 144 Charger_AIRs_Request 9 "Charger" 8 "Charger" 6 "PRECHARGE" 3 "CLOSE" 0 "OPEN" ;
 VAL_ 34 Shutdown_PackageIntck 1 "OK" 0 "OPENED" ;
 VAL_ 34 Shutdown_IMD 1 "OK" 0 "OPENED" ;
 VAL_ 34 Shutdown_BMS 1 "OK" 0 "OPENED" ;
@@ -447,7 +513,7 @@ VAL_ 1 InvertersAction 4 "TorqueCommand" 3 "EnableDrive" 2 "DisableDrive" 1 "Sub
 VAL_ 1 Relay_Error 1 "ERROR" 0 "OK" ;
 VAL_ 1 Regenerative_Enable 1 "Enabled" 0 "Not Enabled" ;
 VAL_ 1 TC_Warning 1 "TC" 0 "NO TC" ;
-VAL_ 1 Sensorics_Mode 4 "Rigid Axle" 3 "Steering TV" 2 "Rigid Axle TC" 1 "TV + TC" ;
+VAL_ 1 Sensorics_Mode 0 "TV + TC" 3 "Rigid Axle" 2 "Steering TV" 1 "Rigid Axle TC" ;
 VAL_ 1 el_Vel_OK 1 "OK" 0 "ERROR" ;
 VAL_ 1 Torque_OK 1 "OK" 0 "ERROR" ;
 VAL_ 1 APPS_Implausibility 1 "ERROR" 0 "OK" ;
@@ -471,13 +537,15 @@ VAL_ 1 Disconnection_BrakePedal 1 "Disconnected" 0 "Connected" ;
 VAL_ 1 Disconnection_BMS 1 "Disconnected" 0 "Connected" ;
 VAL_ 1 Disconnection_APPS2 1 "Disconnected" 0 "Connected" ;
 VAL_ 1 Disconnection_APPS1 0 "Connected" 1 "Disconnected" ;
+VAL_ 49 Pump_R 1 "ON" 0 "OFF" ;
+VAL_ 49 Pump_L 1 "ON" 0 "OFF" ;
 VAL_ 49 Button_2 1 "Pressed" 0 "Not Pressed" ;
 VAL_ 49 Button_1 1 "Pressed" 0 "Not Pressed" ;
 VAL_ 49 Driver 5 "D5" 4 "D4" 3 "D3" 2 "D2" 1 "D1" ;
 VAL_ 49 RacingMode 5 "Endurance" 4 "AutoX" 3 "Acceleration" 2 "SkidPad" 1 "WorkShop" ;
 VAL_ 49 EnableDrive_Order 1 "ON" 0 "OFF" ;
-VAL_ 49 Refri_R 2 "FULL" 1 "OFF" 0 "ON" ;
-VAL_ 49 Refri_L 2 "FULL" 1 "OFF" 0 "ON" ;
+VAL_ 49 Fans_R 2 "FULL" 1 "ON" 0 "OFF" ;
+VAL_ 49 Fans_L 2 "FULL" 1 "ON" 0 "OFF" ;
 VAL_ 2 Car_State 7 "OPEN AIRs" 6 "RTD" 5 "ENABLE INVERTERS" 4 "TS ACTIVE" 3 "PRECHARGE DONE" 2 "PRECHARGE INIT" 1 "STANDBY" 0 "INIT" ;
 VAL_ 2 Car_OK 1 "OK" 0 "ERROR" ;
 VAL_ 2 AIRs_Request 2 "CLOSE" 1 "PRECHARGE" 0 "OPEN" ;

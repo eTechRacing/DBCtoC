@@ -1,0 +1,277 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: Inverter_L Inverter_R ETAS_ES910
+VAL_TABLE_ InvAction 30 "TorqueCommand" 21 "EnableDrive" 20 "DisableDrive" 11 "Subscribe" 10 "Unsubscribe" ;
+VAL_TABLE_ Sensorics_mode 4 "Rigid Axle" 3 "Steering TV" 2 "Rigid Axle with TC" 1 "TV + TC" ;
+VAL_TABLE_ TC_Warning 1 "TC" 0 "No TC" ;
+VAL_TABLE_ Regenerative_Enable 1 "Enabled" 0 "Not Enabled" ;
+VAL_TABLE_ Shutdown_PackageIntck 1 "OK" 0 "OPENED" ;
+VAL_TABLE_ Shutdown_IMD 1 "OPEN" 0 "OPENED" ;
+VAL_TABLE_ Shutdown_BMS 1 "OK" 0 "OPENED" ;
+VAL_TABLE_ CurrentSensor_ERROR 1 "ERROR" 0 "OK" ;
+VAL_TABLE_ BMSerror_OverCurrent 1 "OK" 0 "ERROR" ;
+VAL_TABLE_ State_PrechargeRelay 1 "CLOSED" 0 "OPENED" ;
+VAL_TABLE_ State_DivideCurrent 1 "ON" 0 "OFF" ;
+VAL_TABLE_ State_Balancing 1 "ON" 0 "OFF" ;
+VAL_TABLE_ State_Air_Plus 1 "CLOSED" 0 "OPENED" ;
+VAL_TABLE_ State_Air_Minus 1 "CLOSED" 0 "OPENED" ;
+VAL_TABLE_ State_AccumulatorFans 1 "ON" 0 "OFF" ;
+VAL_TABLE_ BMSerror_VoltageDisconnection 1 "OK" 0 "ERROR" ;
+VAL_TABLE_ BMSerror_UnderVoltage 1 "OK" 0 "ERROR" ;
+VAL_TABLE_ BMSerror_UnderTemperature 1 "OK" 0 "ERROR" ;
+VAL_TABLE_ BMSerror_OverVoltage 1 "OK" 0 "ERROR" ;
+VAL_TABLE_ BMSerror_OverTemperature 1 "OK" 0 "ERROR" ;
+VAL_TABLE_ BMSerror_NTCDisconnection 1 "ON" 0 "ERROR" ;
+VAL_TABLE_ BMSerror_SlaveDisconnection 1 "OK" 0 "ERROR" ;
+VAL_TABLE_ CustomMode_Identifier 10 "K_Reduction_Temperature" 9 "K_Reduction_P" 8 "Power_Limit" 7 "Max_Regenerative_Torque" 6 "APPS_Sat_Up" 5 "APPS_Sat_Down" 4 "Cte_CKF" 3 "Cte_SKF" 2 "CKF_Initial" 1 "SKF_Initial" ;
+VAL_TABLE_ RacingMode 12 "Custom_Experiment_Enviroment" 11 "Custom_Dash" 52 "Endurance_RUN2" 51 "Endurance_RUN1" 42 "AutoX_RUN2" 41 "AutoX_RUN1" 32 "Skidpad_RUN2" 31 "Skidpad_RUN1" 22 "Acceleration_RUN2" 21 "Acceleration_RUN1" 1 "WorkShop_Test" ;
+VAL_TABLE_ AIRs_State 9 "Charger" 6 "Precharge" 3 "CLOSE" 0 "OPEN" ;
+VAL_TABLE_ Torque_LockOn 1 "LOCKED" 0 "UNLOCKED" ;
+VAL_TABLE_ EnableDrive_Order 1 "ON" 0 "OFF" ;
+VAL_TABLE_ Car_State 14 "ENABLE INVERTERS" 13 "LOCKED" 21 "OPEN AIRs" 15 "RTD" 12 "TS ACTIVE" 9 "PRECHARGE DONE" 6 "PRECHARGE INIT" 3 "STANDBY" 0 "INIT" ;
+VAL_TABLE_ AIRs_Request 6 "PRECHARGE" 3 "CLOSE" 0 "OPEN" ;
+VAL_TABLE_ CriticalDisconnection 1 "ERROR" 0 "OK" ;
+VAL_TABLE_ CurrentPathDisconnectionFlag 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_TABLE_ Critical_Signal_Disconnection 1 "ERROR" 0 "OK" ;
+VAL_TABLE_ Critical_CAN_Disconnection 1 "ERROR" 0 "OK" ;
+VAL_TABLE_ APPS_Implausibility 1 "ERROR" 0 "OK" ;
+VAL_TABLE_ Disconnection_Pitot 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_BrakePressure 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_DashBoard 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_TABLE_ Disconnection_BMS 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_TABLE_ Disconnection_Front 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_TABLE_ Disconnection_Rear 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_TABLE_ Disconnection_SteeringSensor 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_TABLE_ Disconnection_Susp_R_R 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_Susp_R_L 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_Susp_F_R 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_Susp_F_L 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_BrakePedal 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_APPS2 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_APPS1 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_TABLE_ Disconnection_Ellipse 1 "DISCONNECTED" 0 "CONNECTED" ;
+
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ Disconnection_Pitot : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_BrakePressure : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_DashBoard : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_BMS : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_Front : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_Rear : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_SteeringSensor : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_Susp_R_R : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_Susp_R_L : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_Susp_F_R : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_Susp_F_L : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_BrakePedal : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_APPS2 : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_APPS1 : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Disconnection_Ellipse : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Inv_R_Enable : 0|16@1+ (1,0) [0|65535] "Bits" Vector__XXX
+ SG_ Inv_L_Enable : 0|16@1+ (1,0) [0|65535] "Bits" Vector__XXX
+ SG_ CustomMode_Identifier : 0|8@0+ (1,0) [1|8] "" Vector__XXX
+ SG_ CustomMode_Data : 0|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Torque_LockOn : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Shutdown_PackageIntck : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Shutdown_IMD : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Shutdown_BMS : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ ERROR : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Accumulator_Current : 0|32@0+ (0.001,-2147483.648) [-350|350] "A" Vector__XXX
+ SG_ Lowest_CellVoltage : 0|16@0+ (0.0001,0) [0|6.5535] "V" Vector__XXX
+ SG_ Highest_CellVoltage : 0|16@0+ (0.0001,0) [0|6.5535] "V" Vector__XXX
+ SG_ Accumulator_Voltage : 0|24@0+ (0.0001,0) [0|1677.7215] "V" Vector__XXX
+ SG_ Charger_MaxVoltage : 0|16@0+ (0.01,0) [0|655.35] "" Vector__XXX
+ SG_ Charger_MaxCurrent : 0|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Lowest_CellTemp : 0|16@0+ (0.1,0) [0|6553.5] "ºC" Vector__XXX
+ SG_ Highest_CellTemp : 0|16@0+ (0.1,0) [0|6553.5] "ºC" Vector__XXX
+ SG_ Average_CellTemp : 0|16@0+ (0.1,0) [0|6553.5] "ºC" Vector__XXX
+ SG_ RacingMode : 0|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ BMS_Alive : 0|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ AIRs_State : 0|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ Dash_Alive : 0|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ PrechargeRequest : 0|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ EnableDrive_Order : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ SoC_KF : 0|8@0+ (1,0) [0|255] "%" Vector__XXX
+ SG_ Speed : 0|8@0- (1,0) [-128|127] "km/h" Vector__XXX
+ SG_ Precharge_Voltage : 0|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
+ SG_ Precharge_Percentage : 0|8@0+ (1,0) [0|100] "100%" Vector__XXX
+ SG_ VDC_Max_Tyre_Slip : 0|8@0+ (0.01,0) [0|2.55] "-" Vector__XXX
+ SG_ Car_State : 0|5@0+ (1,0) [0|21] "" Vector__XXX
+ SG_ AIRs_Request : 0|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ InvertersAction : 0|5@0+ (1,0) [0|31] "-" Vector__XXX
+ SG_ el_Vel_OK : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ TC_Warning : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Regenerative_Enable : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ CriticalDisconnection : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Relay_Error : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Car_OK : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Power : 0|16@0- (0.01,0) [-327.68|327.67] "kW" Vector__XXX
+ SG_ Torque_OK : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Sensorics_Mode : 0|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ Critical_Signal_Disconnection : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Critical_CAN_Disconnection : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ APPS_Implausibility : 0|1@0+ (1,0) [0|1] "Bit" Vector__XXX
+ SG_ Sync_CAN1 : 0|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 0 STAT_ETAS_Sync: 2 ETAS_ES910
+ SG_ ETAS_Sync_Y : 7|16@0+ (1,0) [0|65535] "-" Vector__XXX
+
+BO_ 181 CTRL_Inverter_R_Tx: 4 Inverter_R
+ SG_ Inv_R_TempMotor m73 : 8|16@1+ (1,0) [0|65535] "Bits"  ETAS_ES910
+ SG_ Inv_R_TempIGBT m74 : 8|16@1+ (1,0) [0|65535] "Bits"  ETAS_ES910
+ SG_ Inv_R_Speed m48 : 8|16@1- (0.36622256,0) [-12000.38084608|12000.01462352] "RPM"  ETAS_ES910
+ SG_ Inv_R_RegID M : 0|8@1+ (1,0) [0|255] "-"  ETAS_ES910
+ SG_ Inv_R_Iq m39 : 8|16@1- (0.3738317757,0) [-12249.7196261376|12249.3457943619] "A"  ETAS_ES910
+ SG_ Inv_R_Icommand m38 : 8|16@1- (0.3738317757,0) [-12249.7196261376|12249.3457943619] "A"  ETAS_ES910
+ SG_ Inv_R_Iactual m32 : 8|16@1- (0.3738317757,0) [-12249.7196261376|12249.3457943619] "A"  ETAS_ES910
+ SG_ Inv_R_DCBus m235 : 8|16@1+ (0.03125,0) [0|700] "V"  ETAS_ES910
+
+BO_ 182 CTRL_Inverter_L_Tx: 4 Inverter_L
+ SG_ Inv_L_TempMotor m73 : 8|16@1+ (1,0) [0|65535] "Bits"  ETAS_ES910
+ SG_ Inv_L_TempIGBT m74 : 8|16@1+ (1,0) [0|65535] "Bits"  ETAS_ES910
+ SG_ Inv_L_Speed m48 : 8|16@1- (-0.36622256,0) [-12000.01462352|12000.38084608] "RPM"  ETAS_ES910
+ SG_ Inv_L_Iq m39 : 8|16@1- (0.3738317757,0) [-12249.7196261376|12249.3457943619] "A"  ETAS_ES910
+ SG_ Inv_L_Icommand m38 : 8|16@1- (0.3738317757,0) [-12249.7196261376|12249.3457943619] "A"  ETAS_ES910
+ SG_ Inv_L_Iactual m32 : 8|16@1- (0.3738317757,0) [-12249.7196261376|12249.3457943619] "A"  ETAS_ES910
+ SG_ Inv_L_DCBus m235 : 8|16@1+ (0.03125,0) [0|700] "V"  ETAS_ES910
+ SG_ Inv_L_RegID M : 0|8@1+ (1,0) [0|255] "-"  ETAS_ES910
+
+BO_ 183 CTRL_ETAS_Inverter_R_Rx: 3 ETAS_ES910
+ SG_ Inverter_R_RegID : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Inverter_R_b7tob0 : 15|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Inverter_R_b15tob8 : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 184 CTRL_ETAS_Inverter_L_Rx: 3 ETAS_ES910
+ SG_ Inverter_L_RegID : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Inverter_L_b7tob0 : 15|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Inverter_L_b15tob8 : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+
+
+
+CM_ BO_ 3221225472 "This is a message for not used signals, created by Vector CANdb++ DBC OLE DB Provider.";
+CM_ SG_ 3221225472 Disconnection_Pitot "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_BrakePressure "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_DashBoard "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_BMS "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_Front "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_Rear "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_SteeringSensor "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_Susp_R_R "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_Susp_R_L "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_Susp_F_R "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_Susp_F_L "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_BrakePedal "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_APPS2 "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_APPS1 "[0, 1]";
+CM_ SG_ 3221225472 Disconnection_Ellipse "[0, 1]";
+CM_ SG_ 3221225472 CustomMode_Identifier "[1]";
+CM_ SG_ 3221225472 Torque_LockOn "[0, 1]";
+CM_ SG_ 3221225472 Shutdown_PackageIntck "[0, 1]";
+CM_ SG_ 3221225472 Shutdown_IMD "[0, 1]";
+CM_ SG_ 3221225472 Shutdown_BMS "[0, 1]";
+CM_ SG_ 3221225472 ERROR "[0, 1]";
+CM_ SG_ 3221225472 Accumulator_Current "[-350 - 350]";
+CM_ SG_ 3221225472 Lowest_CellVoltage "[2.8 - 4.2]";
+CM_ SG_ 3221225472 Highest_CellVoltage "[2.8 - 4.2]";
+CM_ SG_ 3221225472 Accumulator_Voltage "[0 - 588]";
+CM_ SG_ 3221225472 Lowest_CellTemp "[0 - +60]";
+CM_ SG_ 3221225472 Highest_CellTemp "[0 - +60]";
+CM_ SG_ 3221225472 Average_CellTemp "[0, +60]";
+CM_ SG_ 3221225472 RacingMode "[1, 2, 3, 4, 5]";
+CM_ SG_ 3221225472 AIRs_State "[0, 3, 6, 8, 9]";
+CM_ SG_ 3221225472 EnableDrive_Order "[0, 1]";
+CM_ SG_ 3221225472 SoC_KF "[0 - 1]";
+CM_ SG_ 3221225472 Precharge_Percentage "[0 - 100]";
+CM_ SG_ 3221225472 VDC_Max_Tyre_Slip "[1 - 1.30]";
+CM_ SG_ 3221225472 Car_State "[0, 3, 6, 9, 12, 13, 14, 15, 21]";
+CM_ SG_ 3221225472 AIRs_Request "[0, 3, 6, 8, 9]";
+CM_ SG_ 3221225472 InvertersAction "[10, 11, 20, 21, 30]";
+CM_ SG_ 3221225472 TC_Warning "[0, 1]";
+CM_ SG_ 3221225472 Regenerative_Enable "[0, 1]";
+CM_ SG_ 3221225472 CriticalDisconnection "[0, 1]";
+CM_ SG_ 3221225472 Relay_Error "[0, 1]";
+CM_ SG_ 3221225472 Car_OK "[0, 1]";
+CM_ SG_ 3221225472 Power "[-115, +85]";
+CM_ SG_ 3221225472 Torque_OK "[0, 1]";
+CM_ SG_ 3221225472 Sensorics_Mode "[1, 2, 3, 4]";
+CM_ SG_ 3221225472 Critical_Signal_Disconnection "[0, 1]";
+CM_ SG_ 3221225472 Critical_CAN_Disconnection "[0, 1]";
+CM_ SG_ 3221225472 APPS_Implausibility "[0, 1]";
+CM_ SG_ 0 ETAS_Sync_Y "[+0]";
+CM_ SG_ 181 Inv_R_Speed "(-20000 - 20000)";
+CM_ SG_ 181 Inv_R_DCBus "[0 - 588]";
+CM_ SG_ 182 Inv_L_Speed "(-20000 - 20000)";
+CM_ SG_ 182 Inv_L_DCBus "[0 - 588]";
+CM_ SG_ 184 Inverter_L_RegID "-";
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "BusType" "CAN";
+VAL_ 3221225472 Disconnection_Pitot 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_BrakePressure 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_DashBoard 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_ 3221225472 Disconnection_BMS 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_ 3221225472 Disconnection_Front 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_ 3221225472 Disconnection_Rear 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_ 3221225472 Disconnection_SteeringSensor 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_ 3221225472 Disconnection_Susp_R_R 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_Susp_R_L 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_Susp_F_R 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_Susp_F_L 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_BrakePedal 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_APPS2 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_APPS1 1 "DISCONNECTION" 0 "CONNECTION" ;
+VAL_ 3221225472 Disconnection_Ellipse 1 "DISCONNECTED" 0 "CONNECTED" ;
+VAL_ 3221225472 CustomMode_Identifier 1 "Max_Tyre_Slip" ;
+VAL_ 3221225472 Torque_LockOn 1 "LOCKED" 0 "UNLOCKED" ;
+VAL_ 3221225472 Shutdown_PackageIntck 1 "OK" 0 "OPENED" ;
+VAL_ 3221225472 Shutdown_IMD 1 "OPEN" 0 "OPENED" ;
+VAL_ 3221225472 Shutdown_BMS 1 "OK" 0 "OPENED" ;
+VAL_ 3221225472 ERROR 1 "ERROR" 0 "OK" ;
+VAL_ 3221225472 RacingMode 5 "Endurance" 4 "AutoX" 3 "Acceleration" 2 "SkidPad" 1 "WorkShop" ;
+VAL_ 3221225472 AIRs_State 8 "Charging Charger" 9 "Closed AIRs Charger" 6 "Precharge" 3 "Closed AIRs" 0 "Opened AIRs" ;
+VAL_ 3221225472 EnableDrive_Order 1 "ON" 0 "OFF" ;
+VAL_ 3221225472 Car_State 14 "ENABLE INVERTERS" 13 "LOCKED" 21 "OPEN AIRs" 15 "RTD" 12 "TS ACTIVE" 9 "PRECHARGE DONE" 6 "PRECHARGE INIT" 3 "STANDBY" 0 "INIT" ;
+VAL_ 3221225472 AIRs_Request 8 "Charging Charger" 9 "Closed AIRs Charger" 6 "Precharge" 3 "Closed AIRs" 0 "Opened AIRs" ;
+VAL_ 3221225472 InvertersAction 30 "TorqueCommand" 21 "EnableDrive" 20 "DisableDrive" 11 "Subscribe" 10 "Unsubscribe" ;
+VAL_ 3221225472 TC_Warning 1 "TC" 0 "No TC" ;
+VAL_ 3221225472 Regenerative_Enable 1 "Enabled" 0 "Not Enabled" ;
+VAL_ 3221225472 CriticalDisconnection 1 "ERROR" 0 "OK" ;
+VAL_ 3221225472 Relay_Error 1 "ERROR" 0 "OK" ;
+VAL_ 3221225472 Sensorics_Mode 4 "Rigid Axle" 3 "Steering TV" 2 "Rigid Axle with TC" 1 "TV + TC" ;
+VAL_ 3221225472 Critical_Signal_Disconnection 1 "ERROR" 0 "OK" ;
+VAL_ 3221225472 Critical_CAN_Disconnection 1 "ERROR" 0 "OK" ;
+VAL_ 3221225472 APPS_Implausibility 1 "ERROR" 0 "OK" ;
+

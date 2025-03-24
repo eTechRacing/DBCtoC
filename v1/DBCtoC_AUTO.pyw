@@ -111,6 +111,14 @@ with open(header_file, "w") as file:
                 else:
                     file.write(f"extern int8_t {signal['name']};\n")
     file.write("\n")
+
+    # Defines
+    
+    file.write("//Defines-----------------------------------------------------------------------------------------------\n")
+    file.write("\n")
+    for message in messages:
+            file.write(f"#define {message['name']}_id {message['id']};\n")
+    file.write("\n")
     # Funcions TX
     file.write("//TX-----------------------------------------------------------------------------------------------------\n")
     file.write("\n")
@@ -176,7 +184,7 @@ with open(source_file, "w") as file:
         file.write(f"   TxHeader.DLC = {message['dlc']};\n")
         file.write(f"   TxHeader.IDE = 0;\n")
         file.write(f"   TxHeader.RTR = 0;\n")
-        file.write(f"   TxHeader.StdId = {message['id']};\n")
+        file.write(f"   TxHeader.StdId = {message['name']}_id;\n")
         file.write("   TxHeader.TransmitGlobalTime = DISABLE;\n")
         
         # Processar els senyals

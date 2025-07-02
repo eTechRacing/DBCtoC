@@ -229,6 +229,7 @@ BO_ 6 PROC_ETAS_VDC_Values: 6 ETAS_ES910
  SG_ APPS1_Value : 7|7@0+ (0.01,0) [0|1] "1%" Vector__XXX
 
 BO_ 49 CTRL_DASH_Driver_Inputs: 3 DashBoard
+ SG_ Refri_ACCU : 17|2@0+ (1,0) [0|0] "" Vector__XXX
  SG_ Pump_R : 20|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ Pump_L : 21|1@0+ (1,0) [0|1] "Bit" Vector__XXX
  SG_ Button_2 : 18|1@0+ (1,0) [0|1] "Bit" Vector__XXX
@@ -426,6 +427,7 @@ CM_ SG_ 6 SteeringSensor_Value "[-120 - 120]";
 CM_ SG_ 6 BrakePedal_Value "[0 - 1]";
 CM_ SG_ 6 APPS2_Value "[0 - 1]";
 CM_ SG_ 6 APPS1_Value "[0 - 1]";
+CM_ SG_ 49 Refri_ACCU "[0, 1, 2]";
 CM_ SG_ 49 Pump_R "[0, 1]";
 CM_ SG_ 49 Pump_L "[0, 1]";
 CM_ SG_ 49 Button_2 "[0, 1]";
@@ -537,6 +539,7 @@ VAL_ 1 Disconnection_BrakePedal 1 "Disconnected" 0 "Connected" ;
 VAL_ 1 Disconnection_BMS 1 "Disconnected" 0 "Connected" ;
 VAL_ 1 Disconnection_APPS2 1 "Disconnected" 0 "Connected" ;
 VAL_ 1 Disconnection_APPS1 0 "Connected" 1 "Disconnected" ;
+VAL_ 49 Refri_ACCU 2 "FULL" 1 "ON" 0 "OFF" ;
 VAL_ 49 Pump_R 1 "ON" 0 "OFF" ;
 VAL_ 49 Pump_L 1 "ON" 0 "OFF" ;
 VAL_ 49 Button_2 1 "Pressed" 0 "Not Pressed" ;

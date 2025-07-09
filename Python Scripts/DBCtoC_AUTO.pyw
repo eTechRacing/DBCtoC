@@ -86,8 +86,8 @@ with open(header_file, "w") as file:
     file.write("// Variables globals\n")
     file.write("extern CAN_TxHeaderTypeDef TxHeader;\n")
     file.write("extern uint32_t TxMailbox;\n")
-    file.write("extern uint8_t TxData[8];\n\n")
-    
+    file.write("extern uint8_t TxData[8];\n")
+    file.write("extern uint8_t error_count;\n\n")
     file.write("//Variables----------------------------------------------------------------------------------------------\n")
     file.write("\n")
     for message in messages:
@@ -150,7 +150,8 @@ with open(source_file, "w") as file:
     file.write("// Variables globals\n")
     file.write("CAN_TxHeaderTypeDef TxHeader = {0};\n")
     file.write("uint32_t TxMailbox = 0;\n")
-    file.write("uint8_t TxData[8] = {0};\n\n")
+    file.write("uint8_t TxData[8] = {0};\n")
+    file.write("uint8_t error_count;\n\n")
     
     file.write("//Variables----------------------------------------------------------------------------------------------\n")
     file.write("\n")
@@ -219,7 +220,9 @@ with open(source_file, "w") as file:
                 mask = mask << last_shift
                 init_byte += 1
                 file.write(f"   TxData[{init_byte}] = (TxData[{init_byte}] & ~{mask}) | (({signal['name']} << {last_shift}) & {mask}); \n")
-        file.write("   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK);\n")
+        file.write("   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK){\n")
+        file.write("        error_count++;\n")
+        file.write("    }\n")
         file.write("}\n")
         file.write("\n")
         

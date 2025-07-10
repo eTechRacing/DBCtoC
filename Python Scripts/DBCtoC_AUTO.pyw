@@ -132,8 +132,12 @@ with open(header_file, "w") as file:
     for message in messages:
         file.write(f"void message_canrx_{message['name']}(uint8_t *RxData);\n")
     file.write("\n")
-    file.write(f"#endif /* INC_{file_name_without_extension.upper()}_H_ */")
 
+     # Funcions RX
+    file.write("//error--------------------------------------------------------------------------------------------------\n")
+    file.write("void error_handle(void);\n")
+    file.write("\n")
+    file.write(f"#endif /* INC_{file_name_without_extension.upper()}_H_ */")
 print(f"Fitxer header creat correctament a: {header_file}")
 
 # Demanar on guardar el fitxer .c
@@ -222,6 +226,8 @@ with open(source_file, "w") as file:
                 file.write(f"   TxData[{init_byte}] = (TxData[{init_byte}] & ~{mask}) | (({signal['name']} << {last_shift}) & {mask}); \n")
         file.write("   if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK){\n")
         file.write("        error_count++;\n")
+        file.write("    } else if (error_count > 0){\n")
+        file.write("        error_count--; \n")
         file.write("    }\n")
         file.write("}\n")
         file.write("\n")
@@ -274,6 +280,14 @@ with open(source_file, "w") as file:
             file.write(f" Unit: {signal['unit']}\n")
         file.write("}\n")
 
+# Funcions error
+    file.write("//Error functions----------------------------------------------------------------------------------------\n")
+    file.write(f"void error_handle(void) {{\n")
+    file.write("    if (error_count > 200) {\n")
+    file.write("        error_count = 0;\n")
+    file.write("        NVIC_SystemReset();\n")
+    file.write("    }\n")
+    file.write("}\n")
 print(f"Fitxer source creat correctament a: {source_file}")
 
 # Mostrar missatge d'èxit
